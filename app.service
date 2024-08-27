@@ -1,0 +1,14 @@
+
+[Unit]
+Description=My BTM Service
+After=network.target
+
+[Service]
+ExecStart=/playground/app gdev
+WorkingDirectory=/playground/
+Restart=always
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,216 @@
+
+# Define the input type for pagination
+
+type Requirement {
+	 id: Int!
+	 name: String!
+	 description: String!
+	 tests: [Test!]!
+	}
+
+input CreateRequirementInput {
+	  name: String!
+	  description: String!
+	}
+
+input UpdateRequirementInput {
+	  id: Int!
+	  name: String!
+	  description: String!
+	}
+
+type Test {
+	 id: Int!
+	 name: String!
+	 steps: String!
+	 expected_result: String!
+	 requirement_id: String!
+	}
+
+input CreateTestInput {
+	  name: String!
+	  steps: String!
+	  expectedresult: String!
+			}
+
+input UpdateTestInput {
+	  id: Int!
+	  name: String!
+	  steps: String!
+	  expected_result: String!
+	}
+
+type Testset {
+	 id: Int!
+	 name: String!
+	 description: String!
+	 tests: [Test!]!
+	}
+
+input CreateTestsetInput {
+	  name: String!
+	  description: String!
+	}
+
+input UpdateTestsetInput {
+	  id: Int!
+	  name: String!
+	  description: String!
+	}
+
+enum Severity {
+  Critical
+  High
+  Medium
+  Low
+}
+
+enum RunStatus {
+  NA       # Not Available
+  NR       # Not Required
+  Blocked
+  Passed
+  Failed
+  InProgress
+}
+
+type TestTestset {
+	 id: Int!
+	 test_id: String!
+	 testset_id: String!
+	 run_status: RunStatus!
+	 run: String!
+	 sevierity: Severity!
+	 issues: [Issue!]!
+	}
+
+input CreateTestTestsetInput {
+	  run_status: String!
+	  run: String!
+	  sevierity: String!
+	}
+
+input UpdateTestTestsetInput {
+	  id: Int!
+	  run_status: String!
+	  run: String!
+	  sevierity: String!
+	}
+
+type Issue {
+	 id: Int!
+	 issue_name: String!
+	 issue_status: String!
+	 issue_description: String!
+	}
+
+input CreateIssueInput {
+	  issue_name: String!
+	  issue_status: String!
+	  issue_description: String!
+	}
+
+input UpdateIssueInput {
+	  id: Int!
+	  issue_name: String!
+	  issue_status: String!
+	  issue_description: String!
+	}
+
+# Define the queries
+type Query {
+ # Retrieve a paginated list of requirements
+  #create paginated items
+  requirements(page:Int!, size: Int!): [Requirement!]!
+
+  # Retrieve a specific Requirement by its ID
+  requirement(id: Int!): Requirement!
+
+   # Retrieve a paginated list of tests
+  #create paginated items
+  tests(page:Int!, size: Int!): [Test!]!
+
+  # Retrieve a specific Test by its ID
+  test(id: Int!): Test!
+
+   # Retrieve a paginated list of testsets
+  #create paginated items
+  testsets(page:Int!, size: Int!): [Testset!]!
+
+  # Retrieve a specific Testset by its ID
+  testset(id: Int!): Testset!
+
+  # Retrieve a  list names of Tests of specfic Testset by its ID
+  testsettests(test_id: Int!, testset_id: Int!, page: Int! ,size: Int!): [Test!]!
+
+   # Retrieve a paginated list of testtestsets
+  #create paginated items
+  testtestsets(page:Int!, size: Int!): [TestTestset!]!
+
+  # Retrieve a specific TestTestset by its ID
+  testtestset(id: Int!): TestTestset!
+
+  # Retrieve a  list names of Issues of specfic TestTestset by its ID
+  testtestsetissues(issue_id: Int!, test_testset_id: Int!, page: Int! ,size: Int!): [Issue!]!
+
+   # Retrieve a paginated list of issues
+  #create paginated items
+  issues(page:Int!, size: Int!): [Issue!]!
+
+  # Retrieve a specific Issue by its ID
+  issue(id: Int!): Issue!
+
+  }
+
+# Define the mutations
+type Mutation {
+  # Create a new requirement
+  #create object
+  createrequirement(input: CreateRequirementInput!): Requirement!
+
+  # Update an existing requirement
+  updaterequirement(input: UpdateRequirementInput!): Requirement!
+
+  # Delete an requirement by its ID
+  deleterequirement(id: Int!): Boolean!
+
+  # Create a new test
+  #create object
+  createtest(input: CreateTestInput!): Test!
+
+  # Update an existing test
+  updatetest(input: UpdateTestInput!): Test!
+
+  # Delete an test by its ID
+  deletetest(id: Int!): Boolean!
+
+  # Create a new testset
+  #create object
+  createtestset(input: CreateTestsetInput!): Testset!
+
+  # Update an existing testset
+  updatetestset(input: UpdateTestsetInput!): Testset!
+
+  # Delete an testset by its ID
+  deletetestset(id: Int!): Boolean!
+
+  createtesttestset(test_id: Int!, testset_id: Int!): Test!
+  deletetesttestset(test_id: Int!, testset_id: Int!): Test!
+
+  # Update an existing testtestset
+  updatetesttestset(input: UpdateTestTestsetInput!): TestTestset!
+
+  createissuetesttestset(issue_id: Int!, testtestset_id: Int!): Issue!
+  deleteissuetesttestset(issue_id: Int!, testtestset_id: Int!): Issue!
+
+  # Create a new issue
+  #create object
+  createissue(input: CreateIssueInput!): Issue!
+
+  # Update an existing issue
+  updateissue(input: UpdateIssueInput!): Issue!
+
+  # Delete an issue by its ID
+  deleteissue(id: Int!): Boolean!
+
+}

@@ -1,0 +1,210 @@
+{
+  "project_name": "open-btm",
+  "app_name": "btm",
+  "back_tick": "`",
+  "models": [
+    {
+      "name": "Requirement",
+      "back_tick": "`",
+      "rln_model": [],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"name,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"description,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Tests",
+          "type": "[]Test",
+          "annotation": "gorm:\"association_foreignkey:RequirementID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"tests,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$false$false$true$false"
+        }
+      ]
+    },
+    {
+      "name": "Test",
+      "back_tick": "`",
+      "rln_model": [],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"name,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Steps",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"steps,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "ExpectedResult",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"expected_result,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "RequirementID",
+          "type": "string",
+          "annotation": "gorm:\"foreignkey:RequirementID OnDelete:SET NULL\" json:\"requirement_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "false$false$false$false$true$false"
+        }
+      ]
+    },
+    {
+      "name": "Testset",
+      "back_tick": "`",
+      "rln_model": ["Test$mtm"],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"name,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"description,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Tests",
+          "type": "[]Test",
+          "annotation": "gorm:\"many2many:test_testsets; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;\" json:\"tests,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$false$false$false$true"
+        }
+      ]
+    },
+    {
+      "name": "TestTestset",
+      "back_tick": "`",
+      "rln_model": ["Issue$mtm"],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "TestID",
+          "type": "string",
+          "annotation": "gorm:\"foreignkey:TestID OnDelete:SET NULL\" json:\"test_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "false$false$false$false$true$false"
+        },
+        {
+          "name": "TestsetID",
+          "type": "string",
+          "annotation": "gorm:\"foreignkey:TestsetID OnDelete:SET NULL\" json:\"testset_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "false$false$false$false$true$false"
+        },
+        {
+          "name": "RunStatus",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"run_status,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Run",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"run,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Sevierity",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"sevierity,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Issues",
+          "type": "[]Issue",
+          "annotation": "gorm:\"many2many:test_testset_issues; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;\" json:\"issues,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$false$false$false$true"
+        }
+      ]
+    },
+    {
+      "name": "Issue",
+      "back_tick": "`",
+      "rln_model": [],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "IssueName",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"issue_name,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "IssueStatus",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"issue_status,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "IssueDescription",
+          "type": "string",
+          "annotation": "gorm:\"not null; unique;\" json:\"issue_description,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+
+2024/08/27 10:13:45 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[31m[error] [0mfailed to parse value &models.Requirement{DB:(*gorm.DB)(nil), ID:0x0, Name:"", Description:"", Tests:[]models.Test(nil)}, got error unsupported data type: gorm.io/gorm/schema.Namer
+
+2024/08/27 10:13:45 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[31m[error] [0mfailed to parse value &models.Test{DB:(*gorm.DB)(nil), ID:0x0, Name:"", Steps:"", ExpectedResult:"", RequirementID:""}, got error unsupported data type: gorm.io/gorm/schema.Namer
+
+2024/08/27 10:13:45 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[31m[error] [0mfailed to parse value &models.Testset{DB:(*gorm.DB)(nil), ID:0x0, Name:"", Description:"", Tests:[]models.Test(nil)}, got error unsupported data type: gorm.io/gorm/schema.Namer
+
+2024/08/27 10:13:45 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[31m[error] [0mfailed to parse value &models.TestTestset{DB:(*gorm.DB)(nil), ID:0x0, TestID:"", TestsetID:"", RunStatus:"", Run:"", Sevierity:"", Issues:[]models.Issue(nil)}, got error unsupported data type: gorm.io/gorm/schema.Namer
+
+2024/08/27 10:13:45 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[31m[error] [0mfailed to parse value &models.Issue{DB:(*gorm.DB)(nil), ID:0x0, IssueName:"", IssueStatus:"", IssueDescription:""}, got error unsupported data type: gorm.io/gorm/schema.Namer
+
+2024/08/27 10:13:45 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[31m[error] [0mfailed to parse value &models.Requirement{DB:(*gorm.DB)(nil), ID:0x0, Name:"", Description:"", Tests:[]models.Test(nil)}, got error unsupported data type: gorm.io/gorm/schema.Namer
+
+2024/08/27 10:22:45 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[0.047ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="requirements"
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[7.411ms] [34;1m[rows:0][0m CREATE TABLE `requirements` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL,CONSTRAINT `uni_requirements_name` UNIQUE (`name`),CONSTRAINT `uni_requirements_description` UNIQUE (`description`))
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.340ms] [34;1m[rows:0][0m CREATE INDEX `idx_requirements_deleted_at` ON `requirements`(`deleted_at`)
+
+2024/08/27 10:22:45 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[0.056ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="tests"
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.162ms] [34;1m[rows:0][0m CREATE TABLE `tests` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`steps` text NOT NULL,`expected_result` text NOT NULL,`requirement_id` integer,CONSTRAINT `uni_tests_name` UNIQUE (`name`),CONSTRAINT `uni_tests_steps` UNIQUE (`steps`),CONSTRAINT `uni_tests_expected_result` UNIQUE (`expected_result`))
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.382ms] [34;1m[rows:0][0m CREATE INDEX `idx_tests_deleted_at` ON `tests`(`deleted_at`)
+
+2024/08/27 10:22:45 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[0.040ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="testsets"
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.747ms] [34;1m[rows:0][0m CREATE TABLE `testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL,CONSTRAINT `uni_testsets_name` UNIQUE (`name`),CONSTRAINT `uni_testsets_description` UNIQUE (`description`))
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.804ms] [34;1m[rows:0][0m CREATE INDEX `idx_testsets_deleted_at` ON `testsets`(`deleted_at`)
+
+2024/08/27 10:22:45 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[0.053ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testsets"
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.856ms] [34;1m[rows:0][0m CREATE TABLE `test_testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`test_id` text,`testset_id` text,`run_status` text NOT NULL,`run` text NOT NULL,`sevierity` text NOT NULL,CONSTRAINT `uni_test_testsets_sevierity` UNIQUE (`sevierity`),CONSTRAINT `uni_test_testsets_run_status` UNIQUE (`run_status`),CONSTRAINT `uni_test_testsets_run` UNIQUE (`run`))
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.336ms] [34;1m[rows:0][0m CREATE INDEX `idx_test_testsets_deleted_at` ON `test_testsets`(`deleted_at`)
+
+2024/08/27 10:22:45 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[0.048ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="issues"
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.248ms] [34;1m[rows:0][0m CREATE TABLE `issues` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`issue_name` text NOT NULL,`issue_status` text NOT NULL,`issue_description` text NOT NULL,CONSTRAINT `uni_issues_issue_name` UNIQUE (`issue_name`),CONSTRAINT `uni_issues_issue_status` UNIQUE (`issue_status`),CONSTRAINT `uni_issues_issue_description` UNIQUE (`issue_description`))
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.005ms] [34;1m[rows:0][0m CREATE INDEX `idx_issues_deleted_at` ON `issues`(`deleted_at`)
+
+2024/08/27 10:22:45 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[0.053ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testset_issues"
+
+2024/08/27 10:22:45 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:17
+[0m[33m[3.085ms] [34;1m[rows:0][0m CREATE TABLE `test_testset_issues` (`test_testset_id` integer,`issue_id` integer,PRIMARY KEY (`test_testset_id`,`issue_id`))
