@@ -1,12 +1,11 @@
-
 package models
 
 import (
 	"fmt"
 	"log"
 
-	"open-btm.com/database"
 	"open-btm.com/configs"
+	"open-btm.com/database"
 )
 
 func InitDatabase() {
@@ -15,17 +14,12 @@ func InitDatabase() {
 	fmt.Println("Connection Opened to Database")
 	if err == nil {
 		if err := database.AutoMigrate(
-			
+			&Sprint{},
 			&Requirement{},
-			
 			&Test{},
-			
 			&Testset{},
-			
 			&TestTestset{},
-			
 			&Issue{},
-			
 		); err != nil {
 			log.Fatalln(err)
 		}
@@ -42,17 +36,19 @@ func CleanDatabase() {
 		fmt.Println("Connection Opened to Database")
 		fmt.Println("Dropping Models if Exist")
 		database.Migrator().DropTable(
-		
+
+			&Sprint{},
+
 			&Requirement{},
-		
+
 			&Test{},
-		
+
 			&Testset{},
-		
+
 			&TestTestset{},
-		
+
 			&Issue{},
-		
+
 		)
 
 		fmt.Println("Database Cleaned")
@@ -60,5 +56,3 @@ func CleanDatabase() {
 		panic(err)
 	}
 }
-
-

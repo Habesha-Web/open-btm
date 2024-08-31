@@ -55,45 +55,59 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		Createissue            func(childComplexity int, input model.CreateIssueInput) int
-		Createissuetesttestset func(childComplexity int, issueID uint, testtestsetID uint) int
-		Createrequirement      func(childComplexity int, input model.CreateRequirementInput) int
-		Createtest             func(childComplexity int, input model.CreateTestInput) int
-		Createtestset          func(childComplexity int, input model.CreateTestsetInput) int
-		Createtesttestset      func(childComplexity int, testID uint, testsetID uint) int
-		Deleteissue            func(childComplexity int, id uint) int
-		Deleteissuetesttestset func(childComplexity int, issueID uint, testtestsetID uint) int
-		Deleterequirement      func(childComplexity int, id uint) int
-		Deletetest             func(childComplexity int, id uint) int
-		Deletetestset          func(childComplexity int, id uint) int
-		Deletetesttestset      func(childComplexity int, testID uint, testsetID uint) int
-		Updateissue            func(childComplexity int, input model.UpdateIssueInput) int
-		Updaterequirement      func(childComplexity int, input model.UpdateRequirementInput) int
-		Updatetest             func(childComplexity int, input model.UpdateTestInput) int
-		Updatetestset          func(childComplexity int, input model.UpdateTestsetInput) int
-		Updatetesttestset      func(childComplexity int, input model.UpdateTestTestsetInput) int
+		Createissue             func(childComplexity int, input model.CreateIssueInput) int
+		Createissuetesttestset  func(childComplexity int, issueID uint, testTestsetID uint) int
+		Createrequirement       func(childComplexity int, input model.CreateRequirementInput) int
+		Createrequirementsprint func(childComplexity int, requirementID uint, sprintID uint) int
+		Createsprint            func(childComplexity int, input model.CreateSprintInput) int
+		Createtest              func(childComplexity int, input model.CreateTestInput) int
+		Createtestset           func(childComplexity int, input model.CreateTestsetInput) int
+		Createtesttestset       func(childComplexity int, testID uint, testsetID uint) int
+		Deleteissue             func(childComplexity int, id uint) int
+		Deleteissuetesttestset  func(childComplexity int, issueID uint, testTestsetID uint) int
+		Deleterequirement       func(childComplexity int, id uint) int
+		Deleterequirementsprint func(childComplexity int, requirementID uint, sprintID uint) int
+		Deletesprint            func(childComplexity int, id uint) int
+		Deletetest              func(childComplexity int, id uint) int
+		Deletetestset           func(childComplexity int, id uint) int
+		Deletetesttestset       func(childComplexity int, testID uint, testsetID uint) int
+		Updateissue             func(childComplexity int, input model.UpdateIssueInput) int
+		Updaterequirement       func(childComplexity int, input model.UpdateRequirementInput) int
+		Updatesprint            func(childComplexity int, input model.UpdateSprintInput) int
+		Updatetest              func(childComplexity int, input model.UpdateTestInput) int
+		Updatetestset           func(childComplexity int, input model.UpdateTestsetInput) int
+		Updatetesttestset       func(childComplexity int, input model.UpdateTestTestsetInput) int
 	}
 
 	Query struct {
-		Issue             func(childComplexity int, id uint) int
-		Issues            func(childComplexity int, page uint, size uint) int
-		Requirement       func(childComplexity int, id uint) int
-		Requirements      func(childComplexity int, page uint, size uint) int
-		Test              func(childComplexity int, id uint) int
-		Tests             func(childComplexity int, page uint, size uint) int
-		Testset           func(childComplexity int, id uint) int
-		Testsets          func(childComplexity int, page uint, size uint) int
-		Testsettests      func(childComplexity int, testID uint, testsetID uint, page uint, size uint) int
-		Testtestset       func(childComplexity int, id uint) int
-		Testtestsetissues func(childComplexity int, issueID uint, testTestsetID uint, page uint, size uint) int
-		Testtestsets      func(childComplexity int, page uint, size uint) int
+		Issue              func(childComplexity int, id uint) int
+		Issues             func(childComplexity int, page uint, size uint) int
+		Requirement        func(childComplexity int, id uint) int
+		Requirements       func(childComplexity int, page uint, size uint) int
+		Sprint             func(childComplexity int, id uint) int
+		Sprintrequirements func(childComplexity int, requirementID uint, sprintID uint, page uint, size uint) int
+		Sprints            func(childComplexity int, page uint, size uint) int
+		Test               func(childComplexity int, id uint) int
+		Tests              func(childComplexity int, page uint, size uint) int
+		Testset            func(childComplexity int, id uint) int
+		Testsets           func(childComplexity int, page uint, size uint) int
+		Testsettests       func(childComplexity int, testID uint, testsetID uint, page uint, size uint) int
+		Testtestset        func(childComplexity int, id uint) int
+		Testtestsetissues  func(childComplexity int, issueID uint, testTestsetID uint, page uint, size uint) int
+		Testtestsets       func(childComplexity int, page uint, size uint) int
 	}
 
 	Requirement struct {
 		Description func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Name        func(childComplexity int) int
-		Tests       func(childComplexity int) int
+		SprintID    func(childComplexity int) int
+	}
+
+	Sprint struct {
+		Description func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Name        func(childComplexity int) int
 	}
 
 	Test struct {
@@ -106,7 +120,6 @@ type ComplexityRoot struct {
 
 	TestTestset struct {
 		ID        func(childComplexity int) int
-		Issues    func(childComplexity int) int
 		Run       func(childComplexity int) int
 		RunStatus func(childComplexity int) int
 		Sevierity func(childComplexity int) int
@@ -118,11 +131,15 @@ type ComplexityRoot struct {
 		Description func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Name        func(childComplexity int) int
-		Tests       func(childComplexity int) int
 	}
 }
 
 type MutationResolver interface {
+	Createsprint(ctx context.Context, input model.CreateSprintInput) (*model.Sprint, error)
+	Updatesprint(ctx context.Context, input model.UpdateSprintInput) (*model.Sprint, error)
+	Deletesprint(ctx context.Context, id uint) (bool, error)
+	Createrequirementsprint(ctx context.Context, requirementID uint, sprintID uint) (*model.Requirement, error)
+	Deleterequirementsprint(ctx context.Context, requirementID uint, sprintID uint) (*model.Requirement, error)
 	Createrequirement(ctx context.Context, input model.CreateRequirementInput) (*model.Requirement, error)
 	Updaterequirement(ctx context.Context, input model.UpdateRequirementInput) (*model.Requirement, error)
 	Deleterequirement(ctx context.Context, id uint) (bool, error)
@@ -135,13 +152,16 @@ type MutationResolver interface {
 	Createtesttestset(ctx context.Context, testID uint, testsetID uint) (*model.Test, error)
 	Deletetesttestset(ctx context.Context, testID uint, testsetID uint) (*model.Test, error)
 	Updatetesttestset(ctx context.Context, input model.UpdateTestTestsetInput) (*model.TestTestset, error)
-	Createissuetesttestset(ctx context.Context, issueID uint, testtestsetID uint) (*model.Issue, error)
-	Deleteissuetesttestset(ctx context.Context, issueID uint, testtestsetID uint) (*model.Issue, error)
+	Createissuetesttestset(ctx context.Context, issueID uint, testTestsetID uint) (*model.Issue, error)
+	Deleteissuetesttestset(ctx context.Context, issueID uint, testTestsetID uint) (*model.Issue, error)
 	Createissue(ctx context.Context, input model.CreateIssueInput) (*model.Issue, error)
 	Updateissue(ctx context.Context, input model.UpdateIssueInput) (*model.Issue, error)
 	Deleteissue(ctx context.Context, id uint) (bool, error)
 }
 type QueryResolver interface {
+	Sprints(ctx context.Context, page uint, size uint) ([]*model.Sprint, error)
+	Sprint(ctx context.Context, id uint) (*model.Sprint, error)
+	Sprintrequirements(ctx context.Context, requirementID uint, sprintID uint, page uint, size uint) ([]*model.Requirement, error)
 	Requirements(ctx context.Context, page uint, size uint) ([]*model.Requirement, error)
 	Requirement(ctx context.Context, id uint) (*model.Requirement, error)
 	Tests(ctx context.Context, page uint, size uint) ([]*model.Test, error)
@@ -225,7 +245,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.Createissuetesttestset(childComplexity, args["issue_id"].(uint), args["testtestset_id"].(uint)), true
+		return e.complexity.Mutation.Createissuetesttestset(childComplexity, args["issue_id"].(uint), args["test_testset_id"].(uint)), true
 
 	case "Mutation.createrequirement":
 		if e.complexity.Mutation.Createrequirement == nil {
@@ -238,6 +258,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Createrequirement(childComplexity, args["input"].(model.CreateRequirementInput)), true
+
+	case "Mutation.createrequirementsprint":
+		if e.complexity.Mutation.Createrequirementsprint == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createrequirementsprint_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Createrequirementsprint(childComplexity, args["requirement_id"].(uint), args["sprint_id"].(uint)), true
+
+	case "Mutation.createsprint":
+		if e.complexity.Mutation.Createsprint == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createsprint_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Createsprint(childComplexity, args["input"].(model.CreateSprintInput)), true
 
 	case "Mutation.createtest":
 		if e.complexity.Mutation.Createtest == nil {
@@ -297,7 +341,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.Deleteissuetesttestset(childComplexity, args["issue_id"].(uint), args["testtestset_id"].(uint)), true
+		return e.complexity.Mutation.Deleteissuetesttestset(childComplexity, args["issue_id"].(uint), args["test_testset_id"].(uint)), true
 
 	case "Mutation.deleterequirement":
 		if e.complexity.Mutation.Deleterequirement == nil {
@@ -310,6 +354,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Deleterequirement(childComplexity, args["id"].(uint)), true
+
+	case "Mutation.deleterequirementsprint":
+		if e.complexity.Mutation.Deleterequirementsprint == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleterequirementsprint_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Deleterequirementsprint(childComplexity, args["requirement_id"].(uint), args["sprint_id"].(uint)), true
+
+	case "Mutation.deletesprint":
+		if e.complexity.Mutation.Deletesprint == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deletesprint_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Deletesprint(childComplexity, args["id"].(uint)), true
 
 	case "Mutation.deletetest":
 		if e.complexity.Mutation.Deletetest == nil {
@@ -370,6 +438,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Updaterequirement(childComplexity, args["input"].(model.UpdateRequirementInput)), true
+
+	case "Mutation.updatesprint":
+		if e.complexity.Mutation.Updatesprint == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatesprint_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Updatesprint(childComplexity, args["input"].(model.UpdateSprintInput)), true
 
 	case "Mutation.updatetest":
 		if e.complexity.Mutation.Updatetest == nil {
@@ -454,6 +534,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Requirements(childComplexity, args["page"].(uint), args["size"].(uint)), true
+
+	case "Query.sprint":
+		if e.complexity.Query.Sprint == nil {
+			break
+		}
+
+		args, err := ec.field_Query_sprint_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Sprint(childComplexity, args["id"].(uint)), true
+
+	case "Query.sprintrequirements":
+		if e.complexity.Query.Sprintrequirements == nil {
+			break
+		}
+
+		args, err := ec.field_Query_sprintrequirements_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Sprintrequirements(childComplexity, args["requirement_id"].(uint), args["sprint_id"].(uint), args["page"].(uint), args["size"].(uint)), true
+
+	case "Query.sprints":
+		if e.complexity.Query.Sprints == nil {
+			break
+		}
+
+		args, err := ec.field_Query_sprints_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Sprints(childComplexity, args["page"].(uint), args["size"].(uint)), true
 
 	case "Query.test":
 		if e.complexity.Query.Test == nil {
@@ -572,12 +688,33 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Requirement.Name(childComplexity), true
 
-	case "Requirement.tests":
-		if e.complexity.Requirement.Tests == nil {
+	case "Requirement.sprint_id":
+		if e.complexity.Requirement.SprintID == nil {
 			break
 		}
 
-		return e.complexity.Requirement.Tests(childComplexity), true
+		return e.complexity.Requirement.SprintID(childComplexity), true
+
+	case "Sprint.description":
+		if e.complexity.Sprint.Description == nil {
+			break
+		}
+
+		return e.complexity.Sprint.Description(childComplexity), true
+
+	case "Sprint.id":
+		if e.complexity.Sprint.ID == nil {
+			break
+		}
+
+		return e.complexity.Sprint.ID(childComplexity), true
+
+	case "Sprint.name":
+		if e.complexity.Sprint.Name == nil {
+			break
+		}
+
+		return e.complexity.Sprint.Name(childComplexity), true
 
 	case "Test.expected_result":
 		if e.complexity.Test.ExpectedResult == nil {
@@ -620,13 +757,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TestTestset.ID(childComplexity), true
-
-	case "TestTestset.issues":
-		if e.complexity.TestTestset.Issues == nil {
-			break
-		}
-
-		return e.complexity.TestTestset.Issues(childComplexity), true
 
 	case "TestTestset.run":
 		if e.complexity.TestTestset.Run == nil {
@@ -684,13 +814,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Testset.Name(childComplexity), true
 
-	case "Testset.tests":
-		if e.complexity.Testset.Tests == nil {
-			break
-		}
-
-		return e.complexity.Testset.Tests(childComplexity), true
-
 	}
 	return 0, false
 }
@@ -701,11 +824,13 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCreateIssueInput,
 		ec.unmarshalInputCreateRequirementInput,
+		ec.unmarshalInputCreateSprintInput,
 		ec.unmarshalInputCreateTestInput,
 		ec.unmarshalInputCreateTestTestsetInput,
 		ec.unmarshalInputCreateTestsetInput,
 		ec.unmarshalInputUpdateIssueInput,
 		ec.unmarshalInputUpdateRequirementInput,
+		ec.unmarshalInputUpdateSprintInput,
 		ec.unmarshalInputUpdateTestInput,
 		ec.unmarshalInputUpdateTestTestsetInput,
 		ec.unmarshalInputUpdateTestsetInput,
@@ -853,14 +978,14 @@ func (ec *executionContext) field_Mutation_createissuetesttestset_args(ctx conte
 	}
 	args["issue_id"] = arg0
 	var arg1 uint
-	if tmp, ok := rawArgs["testtestset_id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("testtestset_id"))
+	if tmp, ok := rawArgs["test_testset_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("test_testset_id"))
 		arg1, err = ec.unmarshalNInt2uint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["testtestset_id"] = arg1
+	args["test_testset_id"] = arg1
 	return args, nil
 }
 
@@ -871,6 +996,45 @@ func (ec *executionContext) field_Mutation_createrequirement_args(ctx context.Co
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateRequirementInput2openᚑbtmᚗcomᚋgraphᚋmodelᚐCreateRequirementInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createrequirementsprint_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uint
+	if tmp, ok := rawArgs["requirement_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requirement_id"))
+		arg0, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["requirement_id"] = arg0
+	var arg1 uint
+	if tmp, ok := rawArgs["sprint_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sprint_id"))
+		arg1, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sprint_id"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createsprint_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreateSprintInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateSprintInput2openᚑbtmᚗcomᚋgraphᚋmodelᚐCreateSprintInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -961,18 +1125,57 @@ func (ec *executionContext) field_Mutation_deleteissuetesttestset_args(ctx conte
 	}
 	args["issue_id"] = arg0
 	var arg1 uint
-	if tmp, ok := rawArgs["testtestset_id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("testtestset_id"))
+	if tmp, ok := rawArgs["test_testset_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("test_testset_id"))
 		arg1, err = ec.unmarshalNInt2uint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["testtestset_id"] = arg1
+	args["test_testset_id"] = arg1
 	return args, nil
 }
 
 func (ec *executionContext) field_Mutation_deleterequirement_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uint
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleterequirementsprint_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uint
+	if tmp, ok := rawArgs["requirement_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requirement_id"))
+		arg0, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["requirement_id"] = arg0
+	var arg1 uint
+	if tmp, ok := rawArgs["sprint_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sprint_id"))
+		arg1, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sprint_id"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deletesprint_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 uint
@@ -1063,6 +1266,21 @@ func (ec *executionContext) field_Mutation_updaterequirement_args(ctx context.Co
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateRequirementInput2openᚑbtmᚗcomᚋgraphᚋmodelᚐUpdateRequirementInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatesprint_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateSprintInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSprintInput2openᚑbtmᚗcomᚋgraphᚋmodelᚐUpdateSprintInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1186,6 +1404,87 @@ func (ec *executionContext) field_Query_requirement_args(ctx context.Context, ra
 }
 
 func (ec *executionContext) field_Query_requirements_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uint
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg0, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg0
+	var arg1 uint
+	if tmp, ok := rawArgs["size"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+		arg1, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["size"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_sprint_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uint
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_sprintrequirements_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uint
+	if tmp, ok := rawArgs["requirement_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requirement_id"))
+		arg0, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["requirement_id"] = arg0
+	var arg1 uint
+	if tmp, ok := rawArgs["sprint_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sprint_id"))
+		arg1, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sprint_id"] = arg1
+	var arg2 uint
+	if tmp, ok := rawArgs["page"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		arg2, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["page"] = arg2
+	var arg3 uint
+	if tmp, ok := rawArgs["size"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+		arg3, err = ec.unmarshalNInt2uint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["size"] = arg3
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_sprints_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 uint
@@ -1624,6 +1923,317 @@ func (ec *executionContext) fieldContext_Issue_issue_description(_ context.Conte
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createsprint(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createsprint(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Createsprint(rctx, fc.Args["input"].(model.CreateSprintInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Sprint)
+	fc.Result = res
+	return ec.marshalNSprint2ᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐSprint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createsprint(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Sprint_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Sprint_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Sprint_description(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Sprint", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createsprint_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updatesprint(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updatesprint(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Updatesprint(rctx, fc.Args["input"].(model.UpdateSprintInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Sprint)
+	fc.Result = res
+	return ec.marshalNSprint2ᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐSprint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updatesprint(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Sprint_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Sprint_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Sprint_description(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Sprint", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updatesprint_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deletesprint(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deletesprint(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Deletesprint(rctx, fc.Args["id"].(uint))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deletesprint(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deletesprint_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createrequirementsprint(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createrequirementsprint(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Createrequirementsprint(rctx, fc.Args["requirement_id"].(uint), fc.Args["sprint_id"].(uint))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Requirement)
+	fc.Result = res
+	return ec.marshalNRequirement2ᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐRequirement(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createrequirementsprint(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Requirement_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Requirement_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Requirement_description(ctx, field)
+			case "sprint_id":
+				return ec.fieldContext_Requirement_sprint_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Requirement", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createrequirementsprint_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleterequirementsprint(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleterequirementsprint(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Deleterequirementsprint(rctx, fc.Args["requirement_id"].(uint), fc.Args["sprint_id"].(uint))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Requirement)
+	fc.Result = res
+	return ec.marshalNRequirement2ᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐRequirement(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleterequirementsprint(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Requirement_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Requirement_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Requirement_description(ctx, field)
+			case "sprint_id":
+				return ec.fieldContext_Requirement_sprint_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Requirement", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleterequirementsprint_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createrequirement(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createrequirement(ctx, field)
 	if err != nil {
@@ -1669,8 +2279,8 @@ func (ec *executionContext) fieldContext_Mutation_createrequirement(ctx context.
 				return ec.fieldContext_Requirement_name(ctx, field)
 			case "description":
 				return ec.fieldContext_Requirement_description(ctx, field)
-			case "tests":
-				return ec.fieldContext_Requirement_tests(ctx, field)
+			case "sprint_id":
+				return ec.fieldContext_Requirement_sprint_id(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Requirement", field.Name)
 		},
@@ -1734,8 +2344,8 @@ func (ec *executionContext) fieldContext_Mutation_updaterequirement(ctx context.
 				return ec.fieldContext_Requirement_name(ctx, field)
 			case "description":
 				return ec.fieldContext_Requirement_description(ctx, field)
-			case "tests":
-				return ec.fieldContext_Requirement_tests(ctx, field)
+			case "sprint_id":
+				return ec.fieldContext_Requirement_sprint_id(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Requirement", field.Name)
 		},
@@ -2043,8 +2653,6 @@ func (ec *executionContext) fieldContext_Mutation_createtestset(ctx context.Cont
 				return ec.fieldContext_Testset_name(ctx, field)
 			case "description":
 				return ec.fieldContext_Testset_description(ctx, field)
-			case "tests":
-				return ec.fieldContext_Testset_tests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Testset", field.Name)
 		},
@@ -2108,8 +2716,6 @@ func (ec *executionContext) fieldContext_Mutation_updatetestset(ctx context.Cont
 				return ec.fieldContext_Testset_name(ctx, field)
 			case "description":
 				return ec.fieldContext_Testset_description(ctx, field)
-			case "tests":
-				return ec.fieldContext_Testset_tests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Testset", field.Name)
 		},
@@ -2368,8 +2974,6 @@ func (ec *executionContext) fieldContext_Mutation_updatetesttestset(ctx context.
 				return ec.fieldContext_TestTestset_run(ctx, field)
 			case "sevierity":
 				return ec.fieldContext_TestTestset_sevierity(ctx, field)
-			case "issues":
-				return ec.fieldContext_TestTestset_issues(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TestTestset", field.Name)
 		},
@@ -2402,7 +3006,7 @@ func (ec *executionContext) _Mutation_createissuetesttestset(ctx context.Context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Createissuetesttestset(rctx, fc.Args["issue_id"].(uint), fc.Args["testtestset_id"].(uint))
+		return ec.resolvers.Mutation().Createissuetesttestset(rctx, fc.Args["issue_id"].(uint), fc.Args["test_testset_id"].(uint))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2467,7 +3071,7 @@ func (ec *executionContext) _Mutation_deleteissuetesttestset(ctx context.Context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Deleteissuetesttestset(rctx, fc.Args["issue_id"].(uint), fc.Args["testtestset_id"].(uint))
+		return ec.resolvers.Mutation().Deleteissuetesttestset(rctx, fc.Args["issue_id"].(uint), fc.Args["test_testset_id"].(uint))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2703,6 +3307,197 @@ func (ec *executionContext) fieldContext_Mutation_deleteissue(ctx context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_sprints(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_sprints(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Sprints(rctx, fc.Args["page"].(uint), fc.Args["size"].(uint))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Sprint)
+	fc.Result = res
+	return ec.marshalNSprint2ᚕᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐSprintᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_sprints(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Sprint_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Sprint_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Sprint_description(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Sprint", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_sprints_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_sprint(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_sprint(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Sprint(rctx, fc.Args["id"].(uint))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Sprint)
+	fc.Result = res
+	return ec.marshalNSprint2ᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐSprint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_sprint(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Sprint_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Sprint_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Sprint_description(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Sprint", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_sprint_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_sprintrequirements(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_sprintrequirements(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Sprintrequirements(rctx, fc.Args["requirement_id"].(uint), fc.Args["sprint_id"].(uint), fc.Args["page"].(uint), fc.Args["size"].(uint))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Requirement)
+	fc.Result = res
+	return ec.marshalNRequirement2ᚕᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐRequirementᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_sprintrequirements(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Requirement_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Requirement_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Requirement_description(ctx, field)
+			case "sprint_id":
+				return ec.fieldContext_Requirement_sprint_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Requirement", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_sprintrequirements_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_requirements(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_requirements(ctx, field)
 	if err != nil {
@@ -2748,8 +3543,8 @@ func (ec *executionContext) fieldContext_Query_requirements(ctx context.Context,
 				return ec.fieldContext_Requirement_name(ctx, field)
 			case "description":
 				return ec.fieldContext_Requirement_description(ctx, field)
-			case "tests":
-				return ec.fieldContext_Requirement_tests(ctx, field)
+			case "sprint_id":
+				return ec.fieldContext_Requirement_sprint_id(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Requirement", field.Name)
 		},
@@ -2813,8 +3608,8 @@ func (ec *executionContext) fieldContext_Query_requirement(ctx context.Context, 
 				return ec.fieldContext_Requirement_name(ctx, field)
 			case "description":
 				return ec.fieldContext_Requirement_description(ctx, field)
-			case "tests":
-				return ec.fieldContext_Requirement_tests(ctx, field)
+			case "sprint_id":
+				return ec.fieldContext_Requirement_sprint_id(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Requirement", field.Name)
 		},
@@ -3012,8 +3807,6 @@ func (ec *executionContext) fieldContext_Query_testsets(ctx context.Context, fie
 				return ec.fieldContext_Testset_name(ctx, field)
 			case "description":
 				return ec.fieldContext_Testset_description(ctx, field)
-			case "tests":
-				return ec.fieldContext_Testset_tests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Testset", field.Name)
 		},
@@ -3077,8 +3870,6 @@ func (ec *executionContext) fieldContext_Query_testset(ctx context.Context, fiel
 				return ec.fieldContext_Testset_name(ctx, field)
 			case "description":
 				return ec.fieldContext_Testset_description(ctx, field)
-			case "tests":
-				return ec.fieldContext_Testset_tests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Testset", field.Name)
 		},
@@ -3215,8 +4006,6 @@ func (ec *executionContext) fieldContext_Query_testtestsets(ctx context.Context,
 				return ec.fieldContext_TestTestset_run(ctx, field)
 			case "sevierity":
 				return ec.fieldContext_TestTestset_sevierity(ctx, field)
-			case "issues":
-				return ec.fieldContext_TestTestset_issues(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TestTestset", field.Name)
 		},
@@ -3286,8 +4075,6 @@ func (ec *executionContext) fieldContext_Query_testtestset(ctx context.Context, 
 				return ec.fieldContext_TestTestset_run(ctx, field)
 			case "sevierity":
 				return ec.fieldContext_TestTestset_sevierity(ctx, field)
-			case "issues":
-				return ec.fieldContext_TestTestset_issues(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TestTestset", field.Name)
 		},
@@ -3762,8 +4549,8 @@ func (ec *executionContext) fieldContext_Requirement_description(_ context.Conte
 	return fc, nil
 }
 
-func (ec *executionContext) _Requirement_tests(ctx context.Context, field graphql.CollectedField, obj *model.Requirement) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Requirement_tests(ctx, field)
+func (ec *executionContext) _Requirement_sprint_id(ctx context.Context, field graphql.CollectedField, obj *model.Requirement) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Requirement_sprint_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3776,7 +4563,7 @@ func (ec *executionContext) _Requirement_tests(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Tests, nil
+		return obj.SprintID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3788,31 +4575,151 @@ func (ec *executionContext) _Requirement_tests(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Test)
+	res := resTmp.(uint)
 	fc.Result = res
-	return ec.marshalNTest2ᚕᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐTestᚄ(ctx, field.Selections, res)
+	return ec.marshalNInt2uint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Requirement_tests(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Requirement_sprint_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Requirement",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Test_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Test_name(ctx, field)
-			case "steps":
-				return ec.fieldContext_Test_steps(ctx, field)
-			case "expected_result":
-				return ec.fieldContext_Test_expected_result(ctx, field)
-			case "requirement_id":
-				return ec.fieldContext_Test_requirement_id(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Test", field.Name)
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Sprint_id(ctx context.Context, field graphql.CollectedField, obj *model.Sprint) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Sprint_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uint)
+	fc.Result = res
+	return ec.marshalNInt2uint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Sprint_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Sprint",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Sprint_name(ctx context.Context, field graphql.CollectedField, obj *model.Sprint) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Sprint_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Sprint_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Sprint",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Sprint_description(ctx context.Context, field graphql.CollectedField, obj *model.Sprint) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Sprint_description(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Sprint_description(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Sprint",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -4302,60 +5209,6 @@ func (ec *executionContext) fieldContext_TestTestset_sevierity(_ context.Context
 	return fc, nil
 }
 
-func (ec *executionContext) _TestTestset_issues(ctx context.Context, field graphql.CollectedField, obj *model.TestTestset) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TestTestset_issues(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Issues, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*model.Issue)
-	fc.Result = res
-	return ec.marshalNIssue2ᚕᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐIssueᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TestTestset_issues(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TestTestset",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Issue_id(ctx, field)
-			case "issue_name":
-				return ec.fieldContext_Issue_issue_name(ctx, field)
-			case "issue_status":
-				return ec.fieldContext_Issue_issue_status(ctx, field)
-			case "issue_description":
-				return ec.fieldContext_Issue_issue_description(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Issue", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Testset_id(ctx context.Context, field graphql.CollectedField, obj *model.Testset) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Testset_id(ctx, field)
 	if err != nil {
@@ -4483,62 +5336,6 @@ func (ec *executionContext) fieldContext_Testset_description(_ context.Context, 
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Testset_tests(ctx context.Context, field graphql.CollectedField, obj *model.Testset) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Testset_tests(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Tests, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*model.Test)
-	fc.Result = res
-	return ec.marshalNTest2ᚕᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐTestᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Testset_tests(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Testset",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Test_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Test_name(ctx, field)
-			case "steps":
-				return ec.fieldContext_Test_steps(ctx, field)
-			case "expected_result":
-				return ec.fieldContext_Test_expected_result(ctx, field)
-			case "requirement_id":
-				return ec.fieldContext_Test_requirement_id(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Test", field.Name)
 		},
 	}
 	return fc, nil
@@ -6340,7 +7137,7 @@ func (ec *executionContext) unmarshalInputCreateIssueInput(ctx context.Context, 
 			it.IssueName = data
 		case "issue_status":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("issue_status"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNIssueStatus2openᚑbtmᚗcomᚋgraphᚋmodelᚐIssueStatus(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6360,6 +7157,40 @@ func (ec *executionContext) unmarshalInputCreateIssueInput(ctx context.Context, 
 
 func (ec *executionContext) unmarshalInputCreateRequirementInput(ctx context.Context, obj interface{}) (model.CreateRequirementInput, error) {
 	var it model.CreateRequirementInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "description"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "description":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Description = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateSprintInput(ctx context.Context, obj interface{}) (model.CreateSprintInput, error) {
+	var it model.CreateSprintInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -6538,7 +7369,7 @@ func (ec *executionContext) unmarshalInputUpdateIssueInput(ctx context.Context, 
 			it.IssueName = data
 		case "issue_status":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("issue_status"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNIssueStatus2openᚑbtmᚗcomᚋgraphᚋmodelᚐIssueStatus(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6558,6 +7389,47 @@ func (ec *executionContext) unmarshalInputUpdateIssueInput(ctx context.Context, 
 
 func (ec *executionContext) unmarshalInputUpdateRequirementInput(ctx context.Context, obj interface{}) (model.UpdateRequirementInput, error) {
 	var it model.UpdateRequirementInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "name", "description"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNInt2uint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "description":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Description = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateSprintInput(ctx context.Context, obj interface{}) (model.UpdateSprintInput, error) {
+	var it model.UpdateSprintInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -6815,6 +7687,41 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
+		case "createsprint":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createsprint(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatesprint":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatesprint(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deletesprint":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deletesprint(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createrequirementsprint":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createrequirementsprint(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deleterequirementsprint":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleterequirementsprint(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "createrequirement":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createrequirement(ctx, field)
@@ -6976,6 +7883,72 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "sprints":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_sprints(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "sprint":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_sprint(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "sprintrequirements":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_sprintrequirements(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "requirements":
 			field := field
 
@@ -7297,8 +8270,57 @@ func (ec *executionContext) _Requirement(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "tests":
-			out.Values[i] = ec._Requirement_tests(ctx, field, obj)
+		case "sprint_id":
+			out.Values[i] = ec._Requirement_sprint_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var sprintImplementors = []string{"Sprint"}
+
+func (ec *executionContext) _Sprint(ctx context.Context, sel ast.SelectionSet, obj *model.Sprint) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sprintImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Sprint")
+		case "id":
+			out.Values[i] = ec._Sprint_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "name":
+			out.Values[i] = ec._Sprint_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "description":
+			out.Values[i] = ec._Sprint_description(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -7425,11 +8447,6 @@ func (ec *executionContext) _TestTestset(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "issues":
-			out.Values[i] = ec._TestTestset_issues(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7476,11 +8493,6 @@ func (ec *executionContext) _Testset(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "description":
 			out.Values[i] = ec._Testset_description(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "tests":
-			out.Values[i] = ec._Testset_tests(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -7858,6 +8870,11 @@ func (ec *executionContext) unmarshalNCreateRequirementInput2openᚑbtmᚗcomᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateSprintInput2openᚑbtmᚗcomᚋgraphᚋmodelᚐCreateSprintInput(ctx context.Context, v interface{}) (model.CreateSprintInput, error) {
+	res, err := ec.unmarshalInputCreateSprintInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateTestInput2openᚑbtmᚗcomᚋgraphᚋmodelᚐCreateTestInput(ctx context.Context, v interface{}) (model.CreateTestInput, error) {
 	res, err := ec.unmarshalInputCreateTestInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -7941,6 +8958,16 @@ func (ec *executionContext) marshalNIssue2ᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐ
 	return ec._Issue(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNIssueStatus2openᚑbtmᚗcomᚋgraphᚋmodelᚐIssueStatus(ctx context.Context, v interface{}) (model.IssueStatus, error) {
+	var res model.IssueStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNIssueStatus2openᚑbtmᚗcomᚋgraphᚋmodelᚐIssueStatus(ctx context.Context, sel ast.SelectionSet, v model.IssueStatus) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNRequirement2openᚑbtmᚗcomᚋgraphᚋmodelᚐRequirement(ctx context.Context, sel ast.SelectionSet, v model.Requirement) graphql.Marshaler {
 	return ec._Requirement(ctx, sel, &v)
 }
@@ -8017,6 +9044,64 @@ func (ec *executionContext) unmarshalNSeverity2openᚑbtmᚗcomᚋgraphᚋmodel�
 
 func (ec *executionContext) marshalNSeverity2openᚑbtmᚗcomᚋgraphᚋmodelᚐSeverity(ctx context.Context, sel ast.SelectionSet, v model.Severity) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) marshalNSprint2openᚑbtmᚗcomᚋgraphᚋmodelᚐSprint(ctx context.Context, sel ast.SelectionSet, v model.Sprint) graphql.Marshaler {
+	return ec._Sprint(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSprint2ᚕᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐSprintᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Sprint) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSprint2ᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐSprint(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSprint2ᚖopenᚑbtmᚗcomᚋgraphᚋmodelᚐSprint(ctx context.Context, sel ast.SelectionSet, v *model.Sprint) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Sprint(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -8215,6 +9300,11 @@ func (ec *executionContext) unmarshalNUpdateIssueInput2openᚑbtmᚗcomᚋgraph�
 
 func (ec *executionContext) unmarshalNUpdateRequirementInput2openᚑbtmᚗcomᚋgraphᚋmodelᚐUpdateRequirementInput(ctx context.Context, v interface{}) (model.UpdateRequirementInput, error) {
 	res, err := ec.unmarshalInputUpdateRequirementInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSprintInput2openᚑbtmᚗcomᚋgraphᚋmodelᚐUpdateSprintInput(ctx context.Context, v interface{}) (model.UpdateSprintInput, error) {
+	res, err := ec.unmarshalInputUpdateSprintInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

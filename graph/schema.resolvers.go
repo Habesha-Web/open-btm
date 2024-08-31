@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/mitchellh/mapstructure"
 	"gorm.io/gorm"
@@ -16,6 +15,179 @@ import (
 	"open-btm.com/graph/model"
 	"open-btm.com/models"
 )
+
+// Createsprint is the resolver for the createsprint field.
+func (r *mutationResolver) Createsprint(ctx context.Context, input model.CreateSprintInput) (*model.Sprint, error) {
+
+	db := r.DB         // databse connection
+	tracer := r.Tracer // otel jaeger tracer
+
+	//created sprint initalization
+	create_sprint := new(model.Sprint)
+
+	//  initiate -> sprint
+	sprint := new(models.Sprint)
+	sprint.Name = input.Name
+	sprint.Description = input.Description
+
+	//  start transaction to database
+	tx := db.WithContext(tracer.Tracer).Begin()
+
+	// add sprint using transaction if values are valid
+	if err := tx.Create(&sprint).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	// close transaction
+	tx.Commit()
+
+	if err := mapstructure.Decode(sprint, &create_sprint); err != nil {
+		return nil, err
+	}
+	return create_sprint, nil
+
+}
+
+// Updatesprint is the resolver for the updatesprint field.
+func (r *mutationResolver) Updatesprint(ctx context.Context, input model.UpdateSprintInput) (*model.Sprint, error) {
+	db := r.DB         // databse connection
+	tracer := r.Tracer // otel jaeger tracer
+
+	// updated up for return if transaction success
+	update_sprint := new(model.Sprint)
+
+	// startng update transaction
+	var sprint models.Sprint
+	sprint.ID = uint(input.ID)
+
+	// Check if the record exists
+	if err := db.WithContext(tracer.Tracer).First(&sprint, sprint.ID).Error; err != nil {
+		return nil, err
+	}
+
+	//  start transaction to database
+	tx := db.WithContext(tracer.Tracer).Begin()
+
+	// add sprint using transaction if values are valid
+	if err := tx.Model(&sprint).UpdateColumns(*&input).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	// close transaction
+	tx.Commit()
+
+	if err := mapstructure.Decode(sprint, &update_sprint); err != nil {
+		return nil, err
+	}
+	return update_sprint, nil
+}
+
+// Deletesprint is the resolver for the deletesprint field.
+func (r *mutationResolver) Deletesprint(ctx context.Context, id uint) (bool, error) {
+	db := r.DB         // databse connection
+	tracer := r.Tracer // otel jaeger tracer
+
+	// startng update transaction
+	var sprint models.Sprint
+	sprint.ID = uint(id)
+
+	// Check if the record exists
+	if err := db.WithContext(tracer.Tracer).First(&sprint, sprint.ID).Error; err != nil {
+		return false, err
+	}
+
+	//  start transaction to database
+	tx := db.WithContext(tracer.Tracer).Begin()
+
+	// delete sprint using transaction if values are valid
+	if err := db.Delete(&sprint).Error; err != nil {
+		tx.Rollback()
+		return false, err
+	}
+	// close transaction
+	tx.Commit()
+
+	return true, nil
+}
+
+// Createrequirementsprint is the resolver for the createrequirementsprint field.
+func (r *mutationResolver) Createrequirementsprint(ctx context.Context, requirementID uint, sprintID uint) (*model.Requirement, error) {
+	db := r.DB         // databse connection
+	tracer := r.Tracer // otel jaeger tracer
+
+	//sprint_requirement for return if transaction success
+	sprint_requirement := new(model.Requirement)
+
+	// updateing requirement transaction
+	var sprint models.Sprint
+	sprint.ID = sprintID
+
+	// Check if the sprint record exists
+	if err := db.WithContext(tracer.Tracer).First(&sprint, sprint.ID).Error; err != nil {
+		return nil, err
+	}
+	// Check if the requirement record exists
+	var requirement models.Requirement
+	if res := db.WithContext(tracer.Tracer).Model(&models.Requirement{}).Where("id = ?", requirementID).First(&requirement); res.Error != nil {
+		return nil, res.Error
+	}
+
+	//  start transaction to database
+	tx := db.WithContext(tracer.Tracer).Begin()
+
+	// add requirement to sprint data using transaction if values are valid
+	if err := db.WithContext(tracer.Tracer).Model(&sprint).Association("Requirements").Append(&requirement); err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	// close transaction
+	tx.Commit()
+
+	if err := mapstructure.Decode(requirement, &sprint_requirement); err != nil {
+		return nil, err
+	}
+	return sprint_requirement, nil
+}
+
+// Deleterequirementsprint is the resolver for the deleterequirementsprint field.
+func (r *mutationResolver) Deleterequirementsprint(ctx context.Context, requirementID uint, sprintID uint) (*model.Requirement, error) {
+	db := r.DB         // databse connection
+	tracer := r.Tracer // otel jaeger tracer
+
+	//sprint_requirement for return if transaction success
+	sprint_requirement := new(model.Requirement)
+
+	// updateing requirement transaction
+	var sprint models.Sprint
+	sprint.ID = sprintID
+
+	// Check if the sprint record exists
+	if err := db.WithContext(tracer.Tracer).First(&sprint, sprint.ID).Error; err != nil {
+		return nil, err
+	}
+
+	// Check if the requirement record exists
+	var requirement models.Requirement
+	if res := db.WithContext(tracer.Tracer).Model(&models.Requirement{}).Where("id = ?", requirementID).First(&requirement); res.Error != nil {
+		return nil, res.Error
+	}
+
+	//  start transaction to database
+	tx := db.WithContext(tracer.Tracer).Begin()
+
+	// delete  data using transaction if values are valid
+	if err := db.WithContext(tracer.Tracer).Model(&sprint).Association("Requirements").Delete(&requirement); err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	// close transaction
+	tx.Commit()
+
+	if err := mapstructure.Decode(requirement, &sprint_requirement); err != nil {
+		return nil, err
+	}
+	return sprint_requirement, nil
+}
 
 // Createrequirement is the resolver for the createrequirement field.
 func (r *mutationResolver) Createrequirement(ctx context.Context, input model.CreateRequirementInput) (*model.Requirement, error) {
@@ -408,7 +580,7 @@ func (r *mutationResolver) Updatetesttestset(ctx context.Context, input model.Up
 }
 
 // Createissuetesttestset is the resolver for the createissuetesttestset field.
-func (r *mutationResolver) Createissuetesttestset(ctx context.Context, issueID uint, testtestsetID uint) (*model.Issue, error) {
+func (r *mutationResolver) Createissuetesttestset(ctx context.Context, issueID uint, testTestsetID uint) (*model.Issue, error) {
 	db := r.DB         // databse connection
 	tracer := r.Tracer // otel jaeger tracer
 
@@ -417,7 +589,7 @@ func (r *mutationResolver) Createissuetesttestset(ctx context.Context, issueID u
 
 	// updateing issue transaction
 	var testtestset models.TestTestset
-	testtestset.ID = testtestsetID
+	testtestset.ID = testTestsetID
 
 	// Check if the testtestset record exists
 	if err := db.WithContext(tracer.Tracer).First(&testtestset, testtestset.ID).Error; err != nil {
@@ -447,7 +619,7 @@ func (r *mutationResolver) Createissuetesttestset(ctx context.Context, issueID u
 }
 
 // Deleteissuetesttestset is the resolver for the deleteissuetesttestset field.
-func (r *mutationResolver) Deleteissuetesttestset(ctx context.Context, issueID uint, testtestsetID uint) (*model.Issue, error) {
+func (r *mutationResolver) Deleteissuetesttestset(ctx context.Context, issueID uint, testTestsetID uint) (*model.Issue, error) {
 	db := r.DB         // databse connection
 	tracer := r.Tracer // otel jaeger tracer
 
@@ -456,7 +628,7 @@ func (r *mutationResolver) Deleteissuetesttestset(ctx context.Context, issueID u
 
 	// updateing issue transaction
 	var testtestset models.TestTestset
-	testtestset.ID = testtestsetID
+	testtestset.ID = testTestsetID
 
 	// Check if the testtestset record exists
 	if err := db.WithContext(tracer.Tracer).First(&testtestset, testtestset.ID).Error; err != nil {
@@ -498,6 +670,7 @@ func (r *mutationResolver) Createissue(ctx context.Context, input model.CreateIs
 	issue := new(models.Issue)
 	issue.IssueName = input.IssueName
 	issue.IssueDescription = input.IssueDescription
+	issue.IssueStatus = input.IssueStatus.String()
 
 	//  start transaction to database
 	tx := db.WithContext(tracer.Tracer).Begin()
@@ -576,6 +749,72 @@ func (r *mutationResolver) Deleteissue(ctx context.Context, id uint) (bool, erro
 	tx.Commit()
 
 	return true, nil
+}
+
+// Sprints is the resolver for getting list of sprints field.
+func (r *queryResolver) Sprints(ctx context.Context, page uint, size uint) ([]*model.Sprint, error) {
+
+	db := r.DB         // Database session for querying
+	tracer := r.Tracer // otel collector context and span
+
+	sprint_get := make([]*model.Sprint, 0)
+	_, result, err := common.PaginationPureModel(db, models.Sprint{}, []models.Sprint{}, uint(page), uint(size), tracer.Tracer)
+	if err != nil {
+		return nil, err
+	}
+	sprint := result.([]models.Sprint)
+
+	// filtering response data according to filtered defined struct
+	// return error if anything happens
+	if err := mapstructure.Decode(sprint, &sprint_get); err != nil {
+		return nil, err
+	}
+	return sprint_get, nil
+}
+
+// Sprint is the resolver for single sprint field.
+func (r *queryResolver) Sprint(ctx context.Context, id uint) (*model.Sprint, error) {
+	db := r.DB         // database connection
+	tracer := r.Tracer //otel tracer span and context
+
+	var sprint models.Sprint    // SQL GORM model
+	var sprint_get model.Sprint // graphql model
+
+	if res := db.WithContext(tracer.Tracer).Model(&models.Sprint{}).Preload(clause.Associations).Where("id = ?", uint(id)).First(&sprint); res.Error != nil {
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			return nil, res.Error
+		}
+		return nil, res.Error
+	}
+
+	// filtering response data according to filtered defined struct
+	// return error if anything happens
+	if err := mapstructure.Decode(sprint, &sprint_get); err != nil {
+		return nil, err
+	}
+
+	return &sprint_get, nil
+}
+
+// Sprintrequirements is the resolver for the getting sprintrequirements field.
+func (r *queryResolver) Sprintrequirements(ctx context.Context, requirementID uint, sprintID uint, page uint, size uint) ([]*model.Requirement, error) {
+	db := r.DB
+	tracer := r.Tracer
+	requirement_get := make([]*model.Requirement, 0)
+	_, result, err := common.PaginationPureModelFilterOneToMany(db, models.Requirement{}, []models.Requirement{}, "sprint_id = ?", uint(sprintID), uint(page), uint(size), tracer.Tracer)
+	if err != nil {
+		return nil, err
+	}
+	requirement := result.([]models.Requirement)
+
+	// filtering response data according to filtered defined struct
+	// return error if anything happens
+	if err := mapstructure.Decode(requirement, &requirement_get); err != nil {
+		return nil, err
+	}
+
+	return requirement_get, nil
+
 }
 
 // Requirements is the resolver for getting list of requirements field.
@@ -710,24 +949,104 @@ func (r *queryResolver) Testset(ctx context.Context, id uint) (*model.Testset, e
 	return &testset_get, nil
 }
 
-// Testsettests is the resolver for the testsettests field.
+// Testsettests is the resolver for the getting testsettests field.
 func (r *queryResolver) Testsettests(ctx context.Context, testID uint, testsetID uint, page uint, size uint) ([]*model.Test, error) {
-	panic(fmt.Errorf("not implemented: Testsettests - testsettests"))
+	db := r.DB
+	tracer := r.Tracer
+	tests_get := make([]*model.Test, 0)
+	join_string := "INNER JOIN testset_tests ur ON tests.id = ur.test_id"
+	filter_string := "testset_id = ?"
+
+	//  to make sure no more that 50 items will be queried per request
+	if size > 50 {
+		size = 50
+	}
+
+	// dry run testing join query
+	tests := []models.Test{}
+	if err := db.WithContext(tracer.Tracer).Model(&models.Test{}).Joins(join_string).Where(filter_string, testsetID).Order("id asc").Limit(int(size)).Offset(int(page - 1)).Find(&tests); err != nil {
+		return nil, err.Error
+	}
+
+	// filtering response data according to filtered defined struct
+	// return error if anything happens
+	if err := mapstructure.Decode(tests, &tests_get); err != nil {
+		return nil, err
+	}
+
+	return tests_get, nil
 }
 
 // Testtestsets is the resolver for the testtestsets field.
 func (r *queryResolver) Testtestsets(ctx context.Context, page uint, size uint) ([]*model.TestTestset, error) {
-	panic(fmt.Errorf("not implemented: Testtestsets - testtestsets"))
+	db := r.DB         // Database session for querying
+	tracer := r.Tracer // otel collector context and span
+
+	testtestset_get := make([]*model.TestTestset, 0)
+	_, result, err := common.PaginationPureModel(db, models.TestTestset{}, []models.TestTestset{}, uint(page), uint(size), tracer.Tracer)
+	if err != nil {
+		return nil, err
+	}
+	testtestset := result.([]models.TestTestset)
+
+	// filtering response data according to filtered defined struct
+	// return error if anything happens
+	if err := mapstructure.Decode(testtestset, &testtestset_get); err != nil {
+		return nil, err
+	}
+	return testtestset_get, nil
 }
 
 // Testtestset is the resolver for the testtestset field.
 func (r *queryResolver) Testtestset(ctx context.Context, id uint) (*model.TestTestset, error) {
-	panic(fmt.Errorf("not implemented: Testtestset - testtestset"))
+	db := r.DB         // database connection
+	tracer := r.Tracer //otel tracer span and context
+
+	var testtestset models.TestTestset    // SQL GORM model
+	var testtestset_get model.TestTestset // graphql model
+
+	if res := db.WithContext(tracer.Tracer).Model(&models.TestTestset{}).Preload(clause.Associations).Where("id = ?", uint(id)).First(&testtestset); res.Error != nil {
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			return nil, res.Error
+		}
+		return nil, res.Error
+	}
+
+	// filtering response data according to filtered defined struct
+	// return error if anything happens
+	if err := mapstructure.Decode(testtestset, &testtestset_get); err != nil {
+		return nil, err
+	}
+
+	return &testtestset_get, nil
 }
 
-// Testtestsetissues is the resolver for the testtestsetissues field.
+// TestTestsetissues is the resolver for the getting testtestsetissues field.
 func (r *queryResolver) Testtestsetissues(ctx context.Context, issueID uint, testTestsetID uint, page uint, size uint) ([]*model.Issue, error) {
-	panic(fmt.Errorf("not implemented: Testtestsetissues - testtestsetissues"))
+	db := r.DB
+	tracer := r.Tracer
+	issues_get := make([]*model.Issue, 0)
+	join_string := "INNER JOIN testtestset_issues ur ON issues.id = ur.issue_id"
+	filter_string := "testtestset_id = ?"
+
+	//  to make sure no more that 50 items will be queried per request
+	if size > 50 {
+		size = 50
+	}
+
+	// dry run testing join query
+	issues := []models.Issue{}
+	if err := db.WithContext(tracer.Tracer).Model(&models.Issue{}).Joins(join_string).Where(filter_string, testTestsetID).Order("id asc").Limit(int(size)).Offset(int(page - 1)).Find(&issues); err != nil {
+		return nil, err.Error
+	}
+
+	// filtering response data according to filtered defined struct
+	// return error if anything happens
+	if err := mapstructure.Decode(issues, &issues_get); err != nil {
+		return nil, err
+	}
+
+	return issues_get, nil
 }
 
 // Issues is the resolver for getting list of issues field.
@@ -782,106 +1101,3 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *queryResolver) TestTestsets(ctx context.Context, page uint, size uint) ([]*model.TestTestset, error) {
-
-	db := r.DB         // Database session for querying
-	tracer := r.Tracer // otel collector context and span
-
-	testtestset_get := make([]*model.TestTestset, 0)
-	_, result, err := common.PaginationPureModel(db, models.TestTestset{}, []models.TestTestset{}, uint(page), uint(size), tracer.Tracer)
-	if err != nil {
-		return nil, err
-	}
-	testtestset := result.([]models.TestTestset)
-
-	// filtering response data according to filtered defined struct
-	// return error if anything happens
-	if err := mapstructure.Decode(testtestset, &testtestset_get); err != nil {
-		return nil, err
-	}
-	return testtestset_get, nil
-}
-func (r *queryResolver) TestTestset(ctx context.Context, id uint) (*model.TestTestset, error) {
-	db := r.DB         // database connection
-	tracer := r.Tracer //otel tracer span and context
-
-	var testtestset models.TestTestset    // SQL GORM model
-	var testtestset_get model.TestTestset // graphql model
-
-	if res := db.WithContext(tracer.Tracer).Model(&models.TestTestset{}).Preload(clause.Associations).Where("id = ?", uint(id)).First(&testtestset); res.Error != nil {
-		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			return nil, res.Error
-		}
-		return nil, res.Error
-	}
-
-	// filtering response data according to filtered defined struct
-	// return error if anything happens
-	if err := mapstructure.Decode(testtestset, &testtestset_get); err != nil {
-		return nil, err
-	}
-
-	return &testtestset_get, nil
-
-}
-func (r *queryResolver) testsettests(ctx context.Context, testID uint, testsetID uint, page uint, size uint) ([]*model.Test, error) {
-	db := r.DB
-	tracer := r.Tracer
-	tests_get := make([]*model.Test, 0)
-	join_string := "INNER JOIN testset_tests ur ON tests.id = ur.test_id"
-	filter_string := "testset_id = ?"
-
-	//  to make sure no more that 50 items will be queried per request
-	if size > 50 {
-		size = 50
-	}
-
-	// dry run testing join query
-	tests := []models.Test{}
-	if err := db.WithContext(tracer.Tracer).Model(&models.Test{}).Joins(join_string).Where(filter_string, testsetID).Order("id asc").Limit(int(size)).Offset(int(page - 1)).Find(&tests); err != nil {
-		return nil, err.Error
-	}
-
-	// filtering response data according to filtered defined struct
-	// return error if anything happens
-	if err := mapstructure.Decode(tests, &tests_get); err != nil {
-		return nil, err
-	}
-
-	return tests_get, nil
-
-}
-func (r *queryResolver) testtestsetissues(ctx context.Context, issueID uint, testtestsetID uint, page uint, size uint) ([]*model.Issue, error) {
-	db := r.DB
-	tracer := r.Tracer
-	issues_get := make([]*model.Issue, 0)
-	join_string := "INNER JOIN testtestset_issues ur ON issues.id = ur.issue_id"
-	filter_string := "testtestset_id = ?"
-
-	//  to make sure no more that 50 items will be queried per request
-	if size > 50 {
-		size = 50
-	}
-
-	// dry run testing join query
-	issues := []models.Issue{}
-	if err := db.WithContext(tracer.Tracer).Model(&models.Issue{}).Joins(join_string).Where(filter_string, testtestsetID).Order("id asc").Limit(int(size)).Offset(int(page - 1)).Find(&issues); err != nil {
-		return nil, err.Error
-	}
-
-	// filtering response data according to filtered defined struct
-	// return error if anything happens
-	if err := mapstructure.Decode(issues, &issues_get); err != nil {
-		return nil, err
-	}
-
-	return issues_get, nil
-
-}

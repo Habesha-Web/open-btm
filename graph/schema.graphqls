@@ -1,11 +1,28 @@
 
 # Define the input type for pagination
+type Sprint {
+	 id: Int!
+	 name: String!
+	 description: String!
+	}
+
+input CreateSprintInput {
+	  name: String!
+	  description: String!
+	}
+
+input UpdateSprintInput {
+	  id: Int!
+	  name: String!
+	  description: String!
+	}
+
 
 type Requirement {
 	 id: Int!
 	 name: String!
 	 description: String!
-	 tests: [Test!]!
+	 sprint_id: Int!
 	}
 
 input CreateRequirementInput {
@@ -31,7 +48,7 @@ input CreateTestInput {
 	  name: String!
 	  steps: String!
 	  expectedresult: String!
-			}
+}
 
 input UpdateTestInput {
 	  id: Int!
@@ -44,8 +61,7 @@ type Testset {
 	 id: Int!
 	 name: String!
 	 description: String!
-	 tests: [Test!]!
-	}
+}
 
 input CreateTestsetInput {
 	  name: String!
@@ -66,13 +82,14 @@ enum Severity {
 }
 
 enum RunStatus {
-  NA       # Not Available
+  NA       # Not Applicable
   NR       # Not Required
   Blocked
   Passed
   Failed
   InProgress
 }
+
 
 type TestTestset {
 	 id: Int!
@@ -81,21 +98,27 @@ type TestTestset {
 	 run_status: RunStatus!
 	 run: String!
 	 sevierity: Severity!
-	 issues: [Issue!]!
-	}
+}
 
 input CreateTestTestsetInput {
 	  run_status: String!
 	  run: String!
 	  sevierity: String!
-	}
+}
 
 input UpdateTestTestsetInput {
 	  id: Int!
 	  run_status: String!
 	  run: String!
 	  sevierity: String!
-	}
+}
+
+enum IssueStatus {
+  Open
+  Fixed
+  Reopened
+  Closed
+}
 
 type Issue {
 	 id: Int!
@@ -106,20 +129,30 @@ type Issue {
 
 input CreateIssueInput {
 	  issue_name: String!
-	  issue_status: String!
+	  issue_status: IssueStatus!
 	  issue_description: String!
 	}
 
 input UpdateIssueInput {
 	  id: Int!
 	  issue_name: String!
-	  issue_status: String!
+	  issue_status: IssueStatus!
 	  issue_description: String!
-	}
+}
 
 # Define the queries
 type Query {
- # Retrieve a paginated list of requirements
+  # Retrieve a paginated list of sprints
+  #create paginated items
+  sprints(page:Int!, size: Int!): [Sprint!]!
+
+  # Retrieve a specific Sprint by its ID
+  sprint(id: Int!): Sprint!
+
+  #Get Sprint Requirements
+  sprintrequirements(requirement_id: Int!, sprint_id: Int!, page: Int! ,size: Int!): [Requirement!]!
+
+  # Retrieve a paginated list of requirements
   #create paginated items
   requirements(page:Int!, size: Int!): [Requirement!]!
 
@@ -164,6 +197,19 @@ type Query {
 
 # Define the mutations
 type Mutation {
+  # Create a new sprint
+  #create object
+  createsprint(input: CreateSprintInput!): Sprint!
+
+  # Update an existing sprint
+  updatesprint(input: UpdateSprintInput!): Sprint!
+
+  # Delete an sprint by its ID
+  deletesprint(id: Int!): Boolean!
+
+  createrequirementsprint(requirement_id: Int!, sprint_id: Int!): Requirement!
+  deleterequirementsprint(requirement_id: Int!, sprint_id: Int!): Requirement!
+
   # Create a new requirement
   #create object
   createrequirement(input: CreateRequirementInput!): Requirement!
@@ -200,8 +246,8 @@ type Mutation {
   # Update an existing testtestset
   updatetesttestset(input: UpdateTestTestsetInput!): TestTestset!
 
-  createissuetesttestset(issue_id: Int!, testtestset_id: Int!): Issue!
-  deleteissuetesttestset(issue_id: Int!, testtestset_id: Int!): Issue!
+  createissuetesttestset(issue_id: Int!, test_testset_id: Int!): Issue!
+  deleteissuetesttestset(issue_id: Int!, test_testset_id: Int!): Issue!
 
   # Create a new issue
   #create object

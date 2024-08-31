@@ -9,12 +9,17 @@ import (
 )
 
 type CreateIssueInput struct {
-	IssueName        string `json:"issue_name"`
-	IssueStatus      string `json:"issue_status"`
-	IssueDescription string `json:"issue_description"`
+	IssueName        string      `json:"issue_name"`
+	IssueStatus      IssueStatus `json:"issue_status"`
+	IssueDescription string      `json:"issue_description"`
 }
 
 type CreateRequirementInput struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type CreateSprintInput struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
@@ -50,10 +55,16 @@ type Query struct {
 }
 
 type Requirement struct {
-	ID          uint    `json:"id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Tests       []*Test `json:"tests"`
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	SprintID    uint   `json:"sprint_id"`
+}
+
+type Sprint struct {
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type Test struct {
@@ -71,24 +82,28 @@ type TestTestset struct {
 	RunStatus RunStatus `json:"run_status"`
 	Run       string    `json:"run"`
 	Sevierity Severity  `json:"sevierity"`
-	Issues    []*Issue  `json:"issues"`
 }
 
 type Testset struct {
-	ID          uint    `json:"id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Tests       []*Test `json:"tests"`
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type UpdateIssueInput struct {
-	ID               uint   `json:"id"`
-	IssueName        string `json:"issue_name"`
-	IssueStatus      string `json:"issue_status"`
-	IssueDescription string `json:"issue_description"`
+	ID               uint        `json:"id"`
+	IssueName        string      `json:"issue_name"`
+	IssueStatus      IssueStatus `json:"issue_status"`
+	IssueDescription string      `json:"issue_description"`
 }
 
 type UpdateRequirementInput struct {
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type UpdateSprintInput struct {
 	ID          uint   `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -112,6 +127,51 @@ type UpdateTestsetInput struct {
 	ID          uint   `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+}
+
+type IssueStatus string
+
+const (
+	IssueStatusOpen     IssueStatus = "Open"
+	IssueStatusFixed    IssueStatus = "Fixed"
+	IssueStatusReopened IssueStatus = "Reopened"
+	IssueStatusClosed   IssueStatus = "Closed"
+)
+
+var AllIssueStatus = []IssueStatus{
+	IssueStatusOpen,
+	IssueStatusFixed,
+	IssueStatusReopened,
+	IssueStatusClosed,
+}
+
+func (e IssueStatus) IsValid() bool {
+	switch e {
+	case IssueStatusOpen, IssueStatusFixed, IssueStatusReopened, IssueStatusClosed:
+		return true
+	}
+	return false
+}
+
+func (e IssueStatus) String() string {
+	return string(e)
+}
+
+func (e *IssueStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = IssueStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid IssueStatus", str)
+	}
+	return nil
+}
+
+func (e IssueStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 type RunStatus string

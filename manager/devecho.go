@@ -22,12 +22,18 @@ import (
 )
 
 var (
+	env                string
 	btmgraphdevechocli = &cobra.Command{
-		Use:   "gdev",
+		Use:   "run",
 		Short: "Run GraphQL Echo Development server ",
 		Long:  `Run Gofr development server`,
 		Run: func(cmd *cobra.Command, args []string) {
-			graph_echo_run()
+			switch env {
+			case "":
+				graph_echo_run("dev")
+			default:
+				graph_echo_run(env)
+			}
 		},
 	}
 )
@@ -50,9 +56,9 @@ func otelechospanstarter(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func graph_echo_run() {
+func graph_echo_run(env string) {
 	//  loading dev env file first
-	configs.AppConfig.SetEnv("dev")
+	configs.AppConfig.SetEnv(env)
 
 	// Starting Otel Global tracer
 	tp := observe.InitTracer()
@@ -102,6 +108,7 @@ func graph_echo_run() {
 }
 
 func init() {
+	btmgraphdevechocli.Flags().StringVar(&env, "env", "help", "Which environment to run for example prod or dev")
 	goFrame.AddCommand(btmgraphdevechocli)
 }
 
