@@ -1,3 +1,4 @@
+directive @hasRole(roles: [String!]!) on FIELD_DEFINITION
 
 # Define the input type for pagination
 type Sprint {
@@ -123,7 +124,7 @@ enum IssueStatus {
 type Issue {
 	 id: Int!
 	 issue_name: String!
-	 issue_status: String!
+	 issue_status: IssueStatus!
 	 issue_description: String!
 	}
 
@@ -142,6 +143,7 @@ input UpdateIssueInput {
 
 # Define the queries
 type Query {
+
   # Retrieve a paginated list of sprints
   #create paginated items
   sprints(page:Int!, size: Int!): [Sprint!]!

@@ -274,3 +274,500 @@
 
 2024/08/31 09:18:05 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
 [0m[33m[4.054ms] [34;1m[rows:0][0m CREATE TABLE `test_testset_issues` (`test_testset_id` integer,`issue_id` integer,PRIMARY KEY (`test_testset_id`,`issue_id`))
+
+2024/09/03 15:02:12 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:61
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=blueuser database=migtwo`: 127.0.0.1:5432 (localhost): server error: FATAL: database "migtwo" does not exist (SQLSTATE 3D000)
+
+2024/09/05 09:53:56 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:59
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=blueuser database=migtwo`: 127.0.0.1:5432 (localhost): server error: FATAL: database "migtwo" does not exist (SQLSTATE 3D000)
+
+2024/09/05 09:54:56 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[0.043ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="projects"
+
+2024/09/05 09:54:56 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[4.265ms] [34;1m[rows:0][0m CREATE TABLE `projects` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL,`uuid` text,CONSTRAINT `uni_projects_uuid` UNIQUE (`uuid`),CONSTRAINT `uni_projects_name` UNIQUE (`name`))
+
+2024/09/05 09:54:56 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[3.231ms] [34;1m[rows:0][0m CREATE INDEX `idx_projects_deleted_at` ON `projects`(`deleted_at`)
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[0.928ms] [34;1m[rows:1][0m INSERT INTO `projects` (`created_at`,`updated_at`,`deleted_at`,`name`,`description`,`uuid`) VALUES ("2024-09-05 09:57:02.356","2024-09-05 09:57:02.356",NULL,"Project Test one","Test Project","0191c0f8-e394-7234-977b-53fe950c73e2") RETURNING `id`,`id`
+
+2024/09/05 09:57:02 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.119ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="sprints"
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.391ms] [34;1m[rows:0][0m CREATE TABLE `sprints` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.228ms] [34;1m[rows:0][0m CREATE INDEX `idx_sprints_deleted_at` ON `sprints`(`deleted_at`)
+
+2024/09/05 09:57:02 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.193ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="requirements"
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.992ms] [34;1m[rows:0][0m CREATE TABLE `requirements` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL,`sprint_id` integer)
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[6.116ms] [34;1m[rows:0][0m CREATE INDEX `idx_requirements_deleted_at` ON `requirements`(`deleted_at`)
+
+2024/09/05 09:57:02 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.292ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="tests"
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.644ms] [34;1m[rows:0][0m CREATE TABLE `tests` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`steps` text NOT NULL,`expected_result` text NOT NULL,`requirement_id` integer)
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.057ms] [34;1m[rows:0][0m CREATE INDEX `idx_tests_deleted_at` ON `tests`(`deleted_at`)
+
+2024/09/05 09:57:02 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.144ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="testsets"
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.739ms] [34;1m[rows:0][0m CREATE TABLE `testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.481ms] [34;1m[rows:0][0m CREATE INDEX `idx_testsets_deleted_at` ON `testsets`(`deleted_at`)
+
+2024/09/05 09:57:02 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.163ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testsets"
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.971ms] [34;1m[rows:0][0m CREATE TABLE `test_testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`test_id` integer,`testset_id` integer,`run_status` text NOT NULL,`run` text NOT NULL,`sevierity` text NOT NULL)
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.408ms] [34;1m[rows:0][0m CREATE INDEX `idx_test_testsets_deleted_at` ON `test_testsets`(`deleted_at`)
+
+2024/09/05 09:57:02 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.262ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="issues"
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.813ms] [34;1m[rows:0][0m CREATE TABLE `issues` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`issue_name` text NOT NULL,`issue_status` text NOT NULL,`issue_description` text NOT NULL)
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.040ms] [34;1m[rows:0][0m CREATE INDEX `idx_issues_deleted_at` ON `issues`(`deleted_at`)
+
+2024/09/05 09:57:02 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.154ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testset_issues"
+
+2024/09/05 09:57:02 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.167ms] [34;1m[rows:0][0m CREATE TABLE `test_testset_issues` (`test_testset_id` integer,`issue_id` integer,PRIMARY KEY (`test_testset_id`,`issue_id`))
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.338ms] [34;1m[rows:1][0m INSERT INTO `projects` (`created_at`,`updated_at`,`deleted_at`,`name`,`description`,`uuid`) VALUES ("2024-09-05 10:03:04.259","2024-09-05 10:03:04.259",NULL,"Project Test TWO","Test Project second","0191c0fe-6943-7129-8a5b-39556f555555") RETURNING `id`,`id`
+
+2024/09/05 10:03:04 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.142ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="sprints"
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.380ms] [34;1m[rows:0][0m CREATE TABLE `sprints` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.188ms] [34;1m[rows:0][0m CREATE INDEX `idx_sprints_deleted_at` ON `sprints`(`deleted_at`)
+
+2024/09/05 10:03:04 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.079ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="requirements"
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.613ms] [34;1m[rows:0][0m CREATE TABLE `requirements` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL,`sprint_id` integer)
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.273ms] [34;1m[rows:0][0m CREATE INDEX `idx_requirements_deleted_at` ON `requirements`(`deleted_at`)
+
+2024/09/05 10:03:04 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.115ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="tests"
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.322ms] [34;1m[rows:0][0m CREATE TABLE `tests` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`steps` text NOT NULL,`expected_result` text NOT NULL,`requirement_id` integer)
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.405ms] [34;1m[rows:0][0m CREATE INDEX `idx_tests_deleted_at` ON `tests`(`deleted_at`)
+
+2024/09/05 10:03:04 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.085ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="testsets"
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.455ms] [34;1m[rows:0][0m CREATE TABLE `testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.582ms] [34;1m[rows:0][0m CREATE INDEX `idx_testsets_deleted_at` ON `testsets`(`deleted_at`)
+
+2024/09/05 10:03:04 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.087ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testsets"
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.983ms] [34;1m[rows:0][0m CREATE TABLE `test_testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`test_id` integer,`testset_id` integer,`run_status` text NOT NULL,`run` text NOT NULL,`sevierity` text NOT NULL)
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.703ms] [34;1m[rows:0][0m CREATE INDEX `idx_test_testsets_deleted_at` ON `test_testsets`(`deleted_at`)
+
+2024/09/05 10:03:04 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.141ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="issues"
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.482ms] [34;1m[rows:0][0m CREATE TABLE `issues` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`issue_name` text NOT NULL,`issue_status` text NOT NULL,`issue_description` text NOT NULL)
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.946ms] [34;1m[rows:0][0m CREATE INDEX `idx_issues_deleted_at` ON `issues`(`deleted_at`)
+
+2024/09/05 10:03:04 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.226ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testset_issues"
+
+2024/09/05 10:03:04 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[6.091ms] [34;1m[rows:0][0m CREATE TABLE `test_testset_issues` (`test_testset_id` integer,`issue_id` integer,PRIMARY KEY (`test_testset_id`,`issue_id`))
+
+2024/09/05 10:08:43 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.365ms] [34;1m[rows:1][0m INSERT INTO `projects` (`created_at`,`updated_at`,`deleted_at`,`name`,`description`,`uuid`) VALUES ("2024-09-05 10:08:43.99","2024-09-05 10:08:43.99",NULL,"Project Test Third","Test Project third one","0191c103-9856-773b-bb65-f15c04e8412c") RETURNING `id`,`id`
+
+2024/09/05 10:08:44 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.166ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="sprints"
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.095ms] [34;1m[rows:0][0m CREATE TABLE `sprints` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[6.698ms] [34;1m[rows:0][0m CREATE INDEX `idx_sprints_deleted_at` ON `sprints`(`deleted_at`)
+
+2024/09/05 10:08:44 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.112ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="requirements"
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.141ms] [34;1m[rows:0][0m CREATE TABLE `requirements` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL,`sprint_id` integer)
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[8.874ms] [34;1m[rows:0][0m CREATE INDEX `idx_requirements_deleted_at` ON `requirements`(`deleted_at`)
+
+2024/09/05 10:08:44 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.116ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="tests"
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.188ms] [34;1m[rows:0][0m CREATE TABLE `tests` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`steps` text NOT NULL,`expected_result` text NOT NULL,`requirement_id` integer)
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.710ms] [34;1m[rows:0][0m CREATE INDEX `idx_tests_deleted_at` ON `tests`(`deleted_at`)
+
+2024/09/05 10:08:44 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.122ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="testsets"
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.423ms] [34;1m[rows:0][0m CREATE TABLE `testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.566ms] [34;1m[rows:0][0m CREATE INDEX `idx_testsets_deleted_at` ON `testsets`(`deleted_at`)
+
+2024/09/05 10:08:44 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.085ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testsets"
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.589ms] [34;1m[rows:0][0m CREATE TABLE `test_testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`test_id` integer,`testset_id` integer,`run_status` text NOT NULL,`run` text NOT NULL,`sevierity` text NOT NULL)
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.496ms] [34;1m[rows:0][0m CREATE INDEX `idx_test_testsets_deleted_at` ON `test_testsets`(`deleted_at`)
+
+2024/09/05 10:08:44 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.086ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="issues"
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.575ms] [34;1m[rows:0][0m CREATE TABLE `issues` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`issue_name` text NOT NULL,`issue_status` text NOT NULL,`issue_description` text NOT NULL)
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.578ms] [34;1m[rows:0][0m CREATE INDEX `idx_issues_deleted_at` ON `issues`(`deleted_at`)
+
+2024/09/05 10:08:44 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.066ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testset_issues"
+
+2024/09/05 10:08:44 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.578ms] [34;1m[rows:0][0m CREATE TABLE `test_testset_issues` (`test_testset_id` integer,`issue_id` integer,PRIMARY KEY (`test_testset_id`,`issue_id`))
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.154ms] [34;1m[rows:1][0m INSERT INTO `projects` (`created_at`,`updated_at`,`deleted_at`,`name`,`description`,`uuid`) VALUES ("2024-09-05 10:10:17.448","2024-09-05 10:10:17.448",NULL,"Project Test four","Test Project fourth one","0191c105-0568-79b3-abf7-7e473840ac38") RETURNING `id`,`id`
+
+2024/09/05 10:10:17 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.105ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="sprints"
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.231ms] [34;1m[rows:0][0m CREATE TABLE `sprints` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.611ms] [34;1m[rows:0][0m CREATE INDEX `idx_sprints_deleted_at` ON `sprints`(`deleted_at`)
+
+2024/09/05 10:10:17 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.121ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="requirements"
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.351ms] [34;1m[rows:0][0m CREATE TABLE `requirements` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL,`sprint_id` integer)
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.406ms] [34;1m[rows:0][0m CREATE INDEX `idx_requirements_deleted_at` ON `requirements`(`deleted_at`)
+
+2024/09/05 10:10:17 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.113ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="tests"
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.002ms] [34;1m[rows:0][0m CREATE TABLE `tests` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`steps` text NOT NULL,`expected_result` text NOT NULL,`requirement_id` integer)
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.318ms] [34;1m[rows:0][0m CREATE INDEX `idx_tests_deleted_at` ON `tests`(`deleted_at`)
+
+2024/09/05 10:10:17 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.088ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="testsets"
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.808ms] [34;1m[rows:0][0m CREATE TABLE `testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.936ms] [34;1m[rows:0][0m CREATE INDEX `idx_testsets_deleted_at` ON `testsets`(`deleted_at`)
+
+2024/09/05 10:10:17 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.067ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testsets"
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.002ms] [34;1m[rows:0][0m CREATE TABLE `test_testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`test_id` integer,`testset_id` integer,`run_status` text NOT NULL,`run` text NOT NULL,`sevierity` text NOT NULL)
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.859ms] [34;1m[rows:0][0m CREATE INDEX `idx_test_testsets_deleted_at` ON `test_testsets`(`deleted_at`)
+
+2024/09/05 10:10:17 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.107ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="issues"
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.787ms] [34;1m[rows:0][0m CREATE TABLE `issues` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`issue_name` text NOT NULL,`issue_status` text NOT NULL,`issue_description` text NOT NULL)
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.867ms] [34;1m[rows:0][0m CREATE INDEX `idx_issues_deleted_at` ON `issues`(`deleted_at`)
+
+2024/09/05 10:10:17 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[0.081ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testset_issues"
+
+2024/09/05 10:10:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[5.051ms] [34;1m[rows:0][0m CREATE TABLE `test_testset_issues` (`test_testset_id` integer,`issue_id` integer,PRIMARY KEY (`test_testset_id`,`issue_id`))
+
+2024/09/05 10:16:47 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[5.911ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND table_type = 'BASE TABLE'
+
+2024/09/05 10:16:47 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[70.467ms] [34;1m[rows:0][0m CREATE TABLE "projects" ("id" bigserial,"created_at" timestamptz,"updated_at" timestamptz,"deleted_at" timestamptz,"name" text NOT NULL,"description" text NOT NULL,"uuid" text,PRIMARY KEY ("id"),CONSTRAINT "uni_projects_name" UNIQUE ("name"),CONSTRAINT "uni_projects_uuid" UNIQUE ("uuid"))
+
+2024/09/05 10:16:47 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[8.016ms] [34;1m[rows:0][0m CREATE INDEX IF NOT EXISTS "idx_projects_deleted_at" ON "projects" ("deleted_at")
+
+2024/09/05 10:17:13 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[3.477ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","description","uuid") VALUES ('2024-09-05 10:17:13.471','2024-09-05 10:17:13.471',NULL,'Project Test one','Test Project one','0191c10b-5e7f-7525-a605-aa51d7067894') RETURNING "id","id"
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[4.083ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND table_type = 'BASE TABLE'
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[0.898ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2024/09/05 10:23:10 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[26.250ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'keycloak' AND table_schema = CURRENT_SCHEMA() AND table_name = 'projects'
+
+2024/09/05 10:23:10 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.348ms] [34;1m[rows:-][0m SELECT * FROM "projects" LIMIT 5
+
+2024/09/05 10:23:10 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[37.953ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'keycloak' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'projects' AND constraint_type = 'UNIQUE'
+
+2024/09/05 10:23:10 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[26.480ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'keycloak' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'projects'
+
+2024/09/05 10:23:10 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[2.326ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'projects'
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[8.110ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[6.582ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[6.294ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[9.605ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[7.380ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[7.790ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'description') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[6.375ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'uuid') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 10:23:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[6.303ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'projects' AND indexname = 'idx_projects_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2024/09/05 10:23:38 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.675ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","description","uuid") VALUES ('2024-09-05 10:23:38.473','2024-09-05 10:23:38.473',NULL,'Project Test two','Test Project two','0191c111-3e69-7bdb-87f1-8b7fdd374c2c') RETURNING "id","id"
+
+2024/09/05 10:23:38 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:188
+[0m[31m[error] [0mfailed to initialize database, got error cannot parse `host=localhost user=postgres password=xxxxx port=5432 sslmode=disable 0191c111-3e69-7bdb-87f1-8b7fdd374c2c`: failed to parse as keyword/value (invalid keyword/value)
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[2.936ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND table_type = 'BASE TABLE'
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[0.217ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2024/09/05 11:28:19 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[9.212ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'keycloak' AND table_schema = CURRENT_SCHEMA() AND table_name = 'projects'
+
+2024/09/05 11:28:19 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[0.934ms] [34;1m[rows:-][0m SELECT * FROM "projects" LIMIT 5
+
+2024/09/05 11:28:19 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[10.719ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'keycloak' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'projects' AND constraint_type = 'UNIQUE'
+
+2024/09/05 11:28:19 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[8.907ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'keycloak' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'projects'
+
+2024/09/05 11:28:19 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[0.506ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'projects'
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.882ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.726ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.659ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.702ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.737ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.768ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'description') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.706ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND column_name = 'uuid') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'projects' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2024/09/05 11:28:19 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[1.204ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'projects' AND indexname = 'idx_projects_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2024/09/05 11:30:33 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.878ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","description","uuid") VALUES ('2024-09-05 11:30:33.644','2024-09-05 11:30:33.644',NULL,'Project Test three','Test Project three','0191c14e-82ac-780f-a2aa-ebf23482fd73') RETURNING "id","id"
+
+2024/09/05 11:30:33 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:188
+[0m[31m[error] [0mfailed to initialize database, got error cannot parse `host=localhost user=postgres password=xxxxx port=5432 sslmode=disable 0191c14e-82ac-780f-a2aa-ebf23482fd73`: failed to parse as keyword/value (invalid keyword/value)
+
+2024/09/05 13:23:10 logger.go:167: [31;1m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38 [35;1mERROR: column "database_name" of relation "projects" does not exist (SQLSTATE 42703)
+[0m[33m[1.043ms] [34;1m[rows:0][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","database_name","description","uuid") VALUES ('2024-09-05 13:23:10.629','2024-09-05 13:23:10.629',NULL,'Project Test five','aKj4Xoq','Test Project five','0191c1b5-9d25-74f4-baaf-4360d8d87c01') RETURNING "id","id"
+
+2024/09/05 13:27:43 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[4.515ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'projects' AND table_type = 'BASE TABLE'
+
+2024/09/05 13:27:43 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[24.748ms] [34;1m[rows:0][0m CREATE TABLE "projects" ("id" bigserial,"created_at" timestamptz,"updated_at" timestamptz,"deleted_at" timestamptz,"name" text NOT NULL,"database_name" text NOT NULL,"description" text NOT NULL,"uuid" text,PRIMARY KEY ("id"),CONSTRAINT "uni_projects_name" UNIQUE ("name"),CONSTRAINT "uni_projects_database_name" UNIQUE ("database_name"),CONSTRAINT "uni_projects_uuid" UNIQUE ("uuid"))
+
+2024/09/05 13:27:43 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:16
+[0m[33m[4.574ms] [34;1m[rows:0][0m CREATE INDEX IF NOT EXISTS "idx_projects_deleted_at" ON "projects" ("deleted_at")
+
+2024/09/05 13:28:05 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[2.426ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","database_name","description","uuid") VALUES ('2024-09-05 13:28:05.134','2024-09-05 13:28:05.134',NULL,'Project Test one','ArsiFg4','Test Project one','0191c1ba-1b8e-7214-80ac-271da14792d9') RETURNING "id","id"
+
+2024/09/05 13:28:05 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:188
+[0m[31m[error] [0mfailed to initialize database, got error cannot parse `host=localhost user=postgres password=xxxxx port=5432 sslmode=disable ArsiFg4`: failed to parse as keyword/value (invalid keyword/value)
+
+2024/09/05 13:30:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.901ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","database_name","description","uuid") VALUES ('2024-09-05 13:30:48.846','2024-09-05 13:30:48.846',NULL,'Project Test two','sDA2SNE','Test Project two','0191c1bc-9b0e-77c6-8ad3-d1789f62d829') RETURNING "id","id"
+
+2024/09/05 13:30:48 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:188
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=postgres database=sDA2SNE`: 127.0.0.1:5432 (localhost): server error: FATAL: database "sDA2SNE" does not exist (SQLSTATE 3D000)
+
+2024/09/05 13:32:06 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.904ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","database_name","description","uuid") VALUES ('2024-09-05 13:32:06.44','2024-09-05 13:32:06.44',NULL,'Project Test three','gTVbkYS','Test Project three','0191c1bd-ca28-7b48-a7a8-b445219dc066') RETURNING "id","id"
+
+2024/09/05 13:32:06 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:188
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=postgres database=gTVbkYS`: 127.0.0.1:5432 (localhost): server error: FATAL: database "gTVbkYS" does not exist (SQLSTATE 3D000)
+
+2024/09/05 13:34:23 logger.go:167: [31;1m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38 [35;1mERROR: duplicate key value violates unique constraint "uni_projects_name" (SQLSTATE 23505)
+[0m[33m[3.738ms] [34;1m[rows:0][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","database_name","description","uuid") VALUES ('2024-09-05 13:34:23.751','2024-09-05 13:34:23.751',NULL,'Project Test three','dDYMLIP','Test Project three','0191c1bf-e287-7e50-b635-4604ad02e88d') RETURNING "id","id"
+
+2024/09/05 13:34:33 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.736ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","database_name","description","uuid") VALUES ('2024-09-05 13:34:33.726','2024-09-05 13:34:33.726',NULL,'Project Test five','lyQnx4Y','Test Project five','0191c1c0-097e-7871-bed3-51739917d010') RETURNING "id","id"
+
+2024/09/05 13:34:33 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:188
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=postgres database=lyQnx4Y`: 127.0.0.1:5432 (localhost): server error: FATAL: database "lyQnx4Y" does not exist (SQLSTATE 3D000)
+
+2024/09/05 13:41:13 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[2.037ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","database_name","description","uuid") VALUES ('2024-09-05 13:41:13.185','2024-09-05 13:41:13.185',NULL,'Project Test one','snZyCYY','Test Project one','0191c1c6-21e1-7cba-a0ac-e713c759ff38') RETURNING "id","id"
+
+2024/09/05 13:41:13 logger.go:148: [35m/home/bushu/Documents/goland/open-btm/database/database.go:188
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=postgres database=snZyCYY`: 127.0.0.1:5432 (localhost): server error: FATAL: database "snZyCYY" does not exist (SQLSTATE 3D000)
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:38
+[0m[33m[1.920ms] [34;1m[rows:1][0m INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","database_name","description","uuid") VALUES ('2024-09-05 13:45:01.15','2024-09-05 13:45:01.15',NULL,'Project Test three','drydhmy','Test Project three','0191c1c9-9c5e-7511-898f-8b158fe5892a') RETURNING "id","id"
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[4.820ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'sprints' AND table_type = 'BASE TABLE'
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[11.797ms] [34;1m[rows:0][0m CREATE TABLE "sprints" ("id" bigserial,"created_at" timestamptz,"updated_at" timestamptz,"deleted_at" timestamptz,"name" text NOT NULL,"description" text NOT NULL,PRIMARY KEY ("id"))
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.824ms] [34;1m[rows:0][0m CREATE INDEX IF NOT EXISTS "idx_sprints_deleted_at" ON "sprints" ("deleted_at")
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[1.668ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'requirements' AND table_type = 'BASE TABLE'
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[10.123ms] [34;1m[rows:0][0m CREATE TABLE "requirements" ("id" bigserial,"created_at" timestamptz,"updated_at" timestamptz,"deleted_at" timestamptz,"name" text NOT NULL,"description" text NOT NULL,"sprint_id" bigint,PRIMARY KEY ("id"))
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.799ms] [34;1m[rows:0][0m CREATE INDEX IF NOT EXISTS "idx_requirements_deleted_at" ON "requirements" ("deleted_at")
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[1.725ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tests' AND table_type = 'BASE TABLE'
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[8.221ms] [34;1m[rows:0][0m CREATE TABLE "tests" ("id" bigserial,"created_at" timestamptz,"updated_at" timestamptz,"deleted_at" timestamptz,"name" text NOT NULL,"steps" text NOT NULL,"expected_result" text NOT NULL,"requirement_id" bigint,PRIMARY KEY ("id"))
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.636ms] [34;1m[rows:0][0m CREATE INDEX IF NOT EXISTS "idx_tests_deleted_at" ON "tests" ("deleted_at")
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[1.189ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'testsets' AND table_type = 'BASE TABLE'
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[6.807ms] [34;1m[rows:0][0m CREATE TABLE "testsets" ("id" bigserial,"created_at" timestamptz,"updated_at" timestamptz,"deleted_at" timestamptz,"name" text NOT NULL,"description" text NOT NULL,PRIMARY KEY ("id"))
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.556ms] [34;1m[rows:0][0m CREATE INDEX IF NOT EXISTS "idx_testsets_deleted_at" ON "testsets" ("deleted_at")
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[1.133ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'test_testsets' AND table_type = 'BASE TABLE'
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[6.666ms] [34;1m[rows:0][0m CREATE TABLE "test_testsets" ("id" bigserial,"created_at" timestamptz,"updated_at" timestamptz,"deleted_at" timestamptz,"test_id" bigint,"testset_id" bigint,"run_status" text NOT NULL,"run" text NOT NULL,"sevierity" text NOT NULL,PRIMARY KEY ("id"))
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.305ms] [34;1m[rows:0][0m CREATE INDEX IF NOT EXISTS "idx_test_testsets_deleted_at" ON "test_testsets" ("deleted_at")
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[1.180ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'issues' AND table_type = 'BASE TABLE'
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[7.106ms] [34;1m[rows:0][0m CREATE TABLE "issues" ("id" bigserial,"created_at" timestamptz,"updated_at" timestamptz,"deleted_at" timestamptz,"issue_name" text NOT NULL,"issue_status" text NOT NULL,"issue_description" text NOT NULL,PRIMARY KEY ("id"))
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.636ms] [34;1m[rows:0][0m CREATE INDEX IF NOT EXISTS "idx_issues_deleted_at" ON "issues" ("deleted_at")
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[1.099ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'test_testset_issues' AND table_type = 'BASE TABLE'
+
+2024/09/05 13:45:01 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:31
+[0m[33m[3.850ms] [34;1m[rows:0][0m CREATE TABLE "test_testset_issues" ("test_testset_id" bigint,"issue_id" bigint,PRIMARY KEY ("test_testset_id","issue_id"))

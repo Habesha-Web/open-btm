@@ -42,10 +42,10 @@ type CreateTestsetInput struct {
 }
 
 type Issue struct {
-	ID               uint   `json:"id"`
-	IssueName        string `json:"issue_name"`
-	IssueStatus      string `json:"issue_status"`
-	IssueDescription string `json:"issue_description"`
+	ID               uint        `json:"id"`
+	IssueName        string      `json:"issue_name"`
+	IssueStatus      IssueStatus `json:"issue_status"`
+	IssueDescription string      `json:"issue_description"`
 }
 
 type Mutation struct {

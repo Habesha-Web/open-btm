@@ -18,7 +18,6 @@ import (
 
 // Createsprint is the resolver for the createsprint field.
 func (r *mutationResolver) Createsprint(ctx context.Context, input model.CreateSprintInput) (*model.Sprint, error) {
-
 	db := r.DB         // databse connection
 	tracer := r.Tracer // otel jaeger tracer
 
@@ -45,7 +44,6 @@ func (r *mutationResolver) Createsprint(ctx context.Context, input model.CreateS
 		return nil, err
 	}
 	return create_sprint, nil
-
 }
 
 // Updatesprint is the resolver for the updatesprint field.
@@ -753,7 +751,6 @@ func (r *mutationResolver) Deleteissue(ctx context.Context, id uint) (bool, erro
 
 // Sprints is the resolver for getting list of sprints field.
 func (r *queryResolver) Sprints(ctx context.Context, page uint, size uint) ([]*model.Sprint, error) {
-
 	db := r.DB         // Database session for querying
 	tracer := r.Tracer // otel collector context and span
 
@@ -814,7 +811,6 @@ func (r *queryResolver) Sprintrequirements(ctx context.Context, requirementID ui
 	}
 
 	return requirement_get, nil
-
 }
 
 // Requirements is the resolver for getting list of requirements field.

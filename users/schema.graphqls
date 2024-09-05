@@ -1,0 +1,84 @@
+directive @hasProjectRole(roles: [String!]!) on FIELD_DEFINITION
+
+# Define the input type for pagination
+type Project {
+	 id: Int!
+	 name: String!
+	 description: String!
+	 uuid: String!
+	}
+
+input CreateProjectInput {
+	  name: String!
+	  description: String!
+	}
+
+input UpdateProjectInput {
+	  id: Int!
+	  name: String!
+	  description: String!
+
+	}
+
+
+
+
+type User {
+    Email: String!
+    Password: String!
+}
+
+input UserInput {
+    Email: String!
+    Password: String!
+}
+
+
+type UserGet {
+    ID: Int!
+    Email: String!
+    UUID:  String!
+}
+
+type Query {
+    # Retrieve a paginated list of projects
+  #create paginated items
+  projects(page:Int!, size: Int!): [Project!]!
+
+  # Retrieve a specific Project by its ID
+  project(id: Int!): Project!
+
+    # Retrieve a paginated list of projects
+  #create paginated items
+  users(page:Int!, size: Int!): [UserGet!]!
+
+  # Retrieve a specific Project by its ID
+  user(id: Int!): UserGet!
+}
+
+
+type Mutation {
+  # Create a new project
+  #create object
+  createproject(input: CreateProjectInput!): Project!
+
+  # Update an existing project
+  updateproject(input: UpdateProjectInput!): Project!
+
+  # Delete an project by its ID
+  deleteproject(id: Int!): Boolean!
+
+  #create user
+  createuser(input: UserInput!): UserGet!
+
+  # Update an existing project
+  updateuser(input: UserInput!): UserGet!
+
+  # Delete an project by its ID
+  deleteuser(id: Int!): Boolean!
+
+  # add and delete user project
+  addprojectuser(user_id: Int!, project_id: Int!): Boolean!
+  deleteprojectuser(user_id: Int!, project_id: Int!): Boolean!
+
+}

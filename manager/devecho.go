@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -13,10 +14,13 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"go.opentelemetry.io/otel/attribute"
+	"gorm.io/gorm/clause"
 	"open-btm.com/configs"
 	"open-btm.com/database"
 	"open-btm.com/graph"
+	"open-btm.com/models"
 	"open-btm.com/observe"
+	"open-btm.com/users"
 
 	"github.com/spf13/cobra"
 )
@@ -116,28 +120,84 @@ func setupRoutes(app *echo.Echo) {
 	gapp := app.Group("/api/v1")
 
 	// playgroundHandler := playground.Handler("GraphQL", "/query")
+	cfg := graph.Config{
+		Directives: graph.DirectiveRoot{
+			HasRole: graph.HasRoleDirective,
+		},
+	}
 
-	gapp.POST("/admin", func(ctx echo.Context) error {
+	//  This is GraphQL project graphql route
+	gapp.POST("/project/:project_id", func(ctx echo.Context) error {
+
+		// Parsing project ID
+		project_id, err := strconv.Atoi(ctx.QueryParam("project_id"))
+		if err != nil {
+			return err
+		}
+
+		//  Getting Project Database Session
+		project_db, err := database.ReturnSession()
+		if err != nil {
+			return nil
+		}
+
+		// Getting Project database Name
+		var project models.Project
+		if res := project_db.Model(&models.Project{}).Preload(clause.Associations).Where("id = ?", uint(project_id)).First(&project); res.Error != nil {
+			return res.Error
+		}
+
 		//  Connecting to Databse
-		db, err := database.ReturnSession()
+		db, err := database.ReturnSessionDatabase(project.DatabaseName)
 		if err != nil {
 			log.Errorf("Error Connecting to Database: %v\n", err)
+			return err
 		}
+
 		//  Geting tracer
 		tracer := ctx.Get("tracer").(*observe.RouteTracer)
 
+		// Providing reslover trancer and database connection
+		cfg.Resolvers = &graph.Resolver{DB: db, Tracer: tracer}
+
 		//  Schema handler
 		graphqlHandler := handler.NewDefaultServer(
-			graph.NewExecutableSchema(
-				graph.Config{Resolvers: &graph.Resolver{DB: db, Tracer: tracer}},
-			),
+			graph.NewExecutableSchema(cfg),
 		)
+
 		graphqlHandler.ServeHTTP(ctx.Response(), ctx.Request())
 		return nil
 	})
 
-	// gapp.GET("/playground", func(ctx echo.Context) error {
-	// 	playgroundHandler.ServeHTTP(ctx.Response(), ctx.Request())
-	// 	return nil
-	// })
+	//  admin graphql  config
+	pcfg := users.Config{
+		Directives: users.DirectiveRoot{
+			HasProjectRole: users.HasProjectRoleDirective,
+		},
+	}
+
+	//  This is GraphQL project graphql route
+	gapp.POST("/admin", func(ctx echo.Context) error {
+
+		// connecting to  Main Project Meta Data database
+		db, err := database.ReturnSession()
+		if err != nil {
+			return nil
+		}
+
+		//  Geting tracer
+		tracer := ctx.Get("tracer").(*observe.RouteTracer)
+
+		// Providing reslover trancer and database connection
+		pcfg.Resolvers = &users.Resolver{DB: db, Tracer: tracer}
+
+		//  Schema handler
+		graphqlHandler := handler.NewDefaultServer(
+			users.NewExecutableSchema(pcfg),
+		)
+
+		graphqlHandler.ServeHTTP(ctx.Response(), ctx.Request())
+		return nil
+	})
+
 }
