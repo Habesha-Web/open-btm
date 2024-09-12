@@ -49,8 +49,16 @@ type UserGet {
     UUID:  String!
 }
 
+type LoginResponse {
+    AccessToken: String!
+    RefreshToken: String!
+}
+
 type Query {
-    # Retrieve a paginated list of projects
+  #login
+  login(email: String!,password: String!): LoginResponse!
+
+  # Retrieve a paginated list of projects
   #create paginated items
   projects(page:Int!, size: Int!): [Project!]!
 

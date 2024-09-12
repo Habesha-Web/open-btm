@@ -7,6 +7,11 @@ type CreateProjectInput struct {
 	Description string `json:"description"`
 }
 
+type LoginResponse struct {
+	AccessToken  string `json:"AccessToken"`
+	RefreshToken string `json:"RefreshToken"`
+}
+
 type Mutation struct {
 }
 

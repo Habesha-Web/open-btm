@@ -10,13 +10,54 @@ import (
 	"net/http"
 	"net/http/httptrace"
 
+	"github.com/golang-jwt/jwt/v5"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"open-btm.com/configs"
 	"open-btm.com/users/model"
 )
 
-var AdminAccessToken string
+var (
+	AdminAccessToken string
+	salt_a           string
+	salt_b           string
+)
+
+// ############################################################################
+// type structs for the Integration functions with Blue Admin API
+// ############################################################################
+type UserClaim struct {
+	jwt.RegisteredClaims
+	Email string   `json:"email"`
+	Roles []string `json:"roles"`
+	UUID  string   `json:"uuid"`
+}
+
+type PostData struct {
+	GrantType string `json:"grant_type"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	Token     string `json:"token"`
+}
+
+type passData struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type JWTSalt struct {
+	SaltA string `json:"salt_a,omitempty"`
+	SaltB string `json:"salt_b,omitempty"`
+}
+
+type LoginResponse struct {
+	AccessToken  string `json:"access_token,omitempty"`
+	RefreshToken string `json:"refresh_token,omitempty"`
+}
+
+// ############################################################################
+// End of type functions
+// ############################################################################
 
 // createHTTPClient sets up an HTTP client with OpenTelemetry instrumentation
 func createHTTPClient() *http.Client {
@@ -137,20 +178,8 @@ func GetUsers(ctx context.Context, page, size uint) ([]model.UserGet, error) {
 		return nil, err
 	}
 
-	// parsing response body
-	var responseMap map[string]interface{}
-	if err := json.Unmarshal(body, &responseMap); err != nil {
-		return nil, err
-	}
-
-	// Marshal map to JSON
-	jsonData, err := json.Marshal(responseMap)
-	if err != nil {
-		return nil, err
-	}
-
 	// Unmarshal JSON to struct
-	err = json.Unmarshal(jsonData, &response)
+	err = json.Unmarshal(body, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -199,20 +228,8 @@ func GetUser(ctx context.Context, user_id uint) (*model.UserGet, error) {
 		return nil, err
 	}
 
-	// parsing response body
-	var responseMap map[string]interface{}
-	if err := json.Unmarshal(body, &responseMap); err != nil {
-		return nil, err
-	}
-
-	// Marshal map to JSON
-	jsonData, err := json.Marshal(responseMap)
-	if err != nil {
-		return nil, err
-	}
-
 	// Unmarshal JSON to struct
-	err = json.Unmarshal(jsonData, &response)
+	err = json.Unmarshal(body, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -384,20 +401,8 @@ func CheckUser(ctx context.Context, uuid string) (uint, error) {
 		return 0, err
 	}
 
-	// parsing response body
-	var responseMap map[string]interface{}
-	if err := json.Unmarshal(body, &responseMap); err != nil {
-		return 0, err
-	}
-
-	// Marshal map to JSON
-	jsonData, err := json.Marshal(responseMap)
-	if err != nil {
-		return 0, err
-	}
-
 	// Unmarshal JSON to struct
-	err = json.Unmarshal(jsonData, &response)
+	err = json.Unmarshal(body, &response)
 	if err != nil {
 		return 0, err
 	}
@@ -557,20 +562,8 @@ func GetAppRoles(ctx context.Context) ([]model.Role, error) {
 		return nil, err
 	}
 
-	// parsing response body
-	var responseMap map[string]interface{}
-	if err := json.Unmarshal(body, &responseMap); err != nil {
-		return nil, err
-	}
-
-	// Marshal map to JSON
-	jsonData, err := json.Marshal(responseMap)
-	if err != nil {
-		return nil, err
-	}
-
 	// Unmarshal JSON to struct
-	err = json.Unmarshal(jsonData, &response)
+	err = json.Unmarshal(body, &response)
 	if err != nil {
 		return nil, err
 	}
@@ -578,17 +571,9 @@ func GetAppRoles(ctx context.Context) ([]model.Role, error) {
 	return response.Data, nil
 }
 
-type PostData struct {
-	GrantType string `json:"grant_type"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	Token     string `json:"token"`
-}
-type passData struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
+// ############################################################################
+// BTM App logging in to the IAM( Blue Admin App)
+// ############################################################################
 func LoginBlueAdmin() (string, bool) {
 	// Retrieve configuration values
 	url := configs.AppConfig.Get("BLUE_ADMIN_URI")
@@ -648,4 +633,157 @@ func LoginBlueAdmin() (string, bool) {
 
 	AdminAccessToken = accessToken
 	return accessToken, true
+}
+
+func LoginUserBlueAdmin(ctx context.Context, email, password string) (LoginResponse, error) {
+	// response
+	var response struct {
+		Data LoginResponse `json:"data"`
+	}
+
+	// Retrieve configuration values
+	url := configs.AppConfig.Get("BLUE_ADMIN_URI")
+
+	// Create an HTTP client with OpenTelemetry middleware
+	client := createHTTPClient()
+
+	// Prepare POST request data
+	postData := PostData{
+		GrantType: "authorization_code",
+		Email:     email,
+		Password:  password,
+		Token:     "token",
+	}
+
+	// change post data to json strings
+	postDataBytes, err := json.Marshal(postData)
+	if err != nil {
+		return LoginResponse{}, err
+	}
+
+	// Build and send the request
+	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%v/login", url), bytes.NewReader(postDataBytes))
+	if err != nil {
+		return LoginResponse{}, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return LoginResponse{}, err
+	}
+	defer resp.Body.Close()
+
+	// Read and unmarshal response
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return LoginResponse{}, err
+	}
+
+	// Unmarshal JSON to struct
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return LoginResponse{}, err
+	}
+
+	return response.Data, nil
+}
+
+// ############################################################################
+// Login Helper Functions
+// ############################################################################
+
+func GetJWTSalts(ctx context.Context) (JWTSalt, error) {
+	//  define var for response
+	var response struct {
+		Data JWTSalt `json:"data"`
+	}
+
+	// Retrieve configuration values
+	url := configs.AppConfig.Get("BLUE_ADMIN_URI")
+
+	// Create an HTTP client with OpenTelemetry middleware
+	client := createHTTPClient()
+
+	// Build and send the request
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/jwtsalt", url), nil)
+	if err != nil {
+		return JWTSalt{}, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if AdminAccessToken == "" {
+		if _, ok := LoginBlueAdmin(); ok != true {
+			return JWTSalt{}, fmt.Errorf("Error logging in to IAM please correct your config credntial files")
+		}
+	}
+
+	//  Set Token Header
+	req.Header.Set("X-APP-TOKEN", AdminAccessToken)
+
+	//  Make request to IAM
+	resp, err := client.Do(req)
+	if err != nil {
+		return JWTSalt{}, err
+	}
+	defer resp.Body.Close()
+
+	// Read and unmarshal response
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return JWTSalt{}, err
+	}
+
+	// parsing response body
+	var responseMap map[string]interface{}
+	if err := json.Unmarshal(body, &responseMap); err != nil {
+		return JWTSalt{}, err
+	}
+
+	// Marshal map to JSON
+	jsonData, err := json.Marshal(responseMap)
+	if err != nil {
+		return JWTSalt{}, err
+	}
+
+	// Unmarshal JSON to struct
+	err = json.Unmarshal(jsonData, &response)
+	if err != nil {
+		return JWTSalt{}, err
+	}
+
+	//return user if parsed with no error
+	return response.Data, nil
+}
+
+func ParseJWTToken(jwtToken string) (UserClaim, error) {
+	salts, err := GetJWTSalts(context.Background())
+	if err != nil {
+		return UserClaim{}, err
+	}
+
+	salt_a = salts.SaltA
+	salt_b = salts.SaltB
+	response_a := UserClaim{}
+	response_b := UserClaim{}
+
+	token_a, aerr := jwt.ParseWithClaims(jwtToken, &response_a, func(token *jwt.Token) (interface{}, error) {
+		return []byte(salt_a), nil
+	})
+	token_b, berr := jwt.ParseWithClaims(jwtToken, &response_b, func(token *jwt.Token) (interface{}, error) {
+		return []byte(salt_b), nil
+	})
+
+	if aerr != nil && berr != nil {
+		return UserClaim{}, aerr
+	}
+
+	// check token validity, for example token might have been expired
+	if !token_a.Valid {
+		if !token_b.Valid {
+			return UserClaim{}, fmt.Errorf("invalid token with second salt")
+		}
+		return response_b, nil
+	}
+	return response_a, nil
+
 }

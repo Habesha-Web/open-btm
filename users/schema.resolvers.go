@@ -286,6 +286,23 @@ func (r *mutationResolver) Deleteprojectuser(ctx context.Context, userID uint, p
 	return true, nil
 }
 
+// Login is the resolver for the login field.
+func (r *queryResolver) Login(ctx context.Context, email string, password string) (*model.LoginResponse, error) {
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	resp, err := models.LoginUserBlueAdmin(tracer.Tracer, email, password)
+	if err != nil {
+		return nil, err
+	}
+
+	result := model.LoginResponse{
+		AccessToken:  resp.AccessToken,
+		RefreshToken: resp.RefreshToken,
+	}
+	return &result, nil
+}
+
 // Projects is the resolver for getting list of projects field.
 func (r *queryResolver) Projects(ctx context.Context, page uint, size uint) ([]*model.Project, error) {
 	db := r.DB         // Database session for querying
