@@ -5,3 +5,4 @@ tests/.env
 tests/.test.env
 gschema/*
 some.txt
+.env

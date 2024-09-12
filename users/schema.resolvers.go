@@ -13,6 +13,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"open-btm.com/common"
+	"open-btm.com/configs"
 	"open-btm.com/database"
 	"open-btm.com/models"
 	"open-btm.com/users/model"
@@ -42,9 +43,12 @@ func (r *mutationResolver) Createproject(ctx context.Context, input model.Create
 	tx.Commit()
 	// close transaction
 
-	_, err := database.CreateDatabase(project.DatabaseName)
-	if err != nil {
-		return nil, fmt.Errorf("Error Creating Project Database: %v", err)
+	// in sqlite we don't have to user create databse query only for postgres and mysql
+	if configs.AppConfig.Get("DB_TYPE") != "sqlite" {
+		_, err := database.CreateDatabase(project.DatabaseName)
+		if err != nil {
+			return nil, fmt.Errorf("Error Creating Project Database: %v", err)
+		}
 	}
 
 	models.MigrateToPojectDatabase(project.DatabaseName)
@@ -120,27 +124,166 @@ func (r *mutationResolver) Deleteproject(ctx context.Context, id uint) (bool, er
 
 // Createuser is the resolver for the createuser field.
 func (r *mutationResolver) Createuser(ctx context.Context, input model.UserInput) (*model.UserGet, error) {
-	panic(fmt.Errorf("not implemented: Createuser - createuser"))
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	user, err := models.CreateUser(tracer.Tracer, model.User(input))
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return user, nil
 }
 
 // Updateuser is the resolver for the updateuser field.
-func (r *mutationResolver) Updateuser(ctx context.Context, input model.UserInput) (*model.UserGet, error) {
-	panic(fmt.Errorf("not implemented: Updateuser - updateuser"))
+func (r *mutationResolver) Updateuser(ctx context.Context, input model.UserUdateInput, userID uint) (bool, error) {
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	result, err := models.UpdateUser(tracer.Tracer, input, int(userID))
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
+// Changeresetuserpassword is the resolver for the changeresetuserpassword field.
+func (r *mutationResolver) Changeresetuserpassword(ctx context.Context, password string, email string, reset bool) (bool, error) {
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	result, err := models.ResetPasswordUser(tracer.Tracer, password, email)
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
 }
 
 // Deleteuser is the resolver for the deleteuser field.
 func (r *mutationResolver) Deleteuser(ctx context.Context, id uint) (bool, error) {
-	panic(fmt.Errorf("not implemented: Deleteuser - deleteuser"))
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	result, err := models.DeleteUser(tracer.Tracer, id)
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
+// Adduserrole is the resolver for the adduserrole field.
+func (r *mutationResolver) Adduserrole(ctx context.Context, roleID uint, userID *uint) (bool, error) {
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	result, err := models.AddRoleToUser(tracer.Tracer, int(roleID), int(*userID))
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
+// Removeuserrole is the resolver for the removeuserrole field.
+func (r *mutationResolver) Removeuserrole(ctx context.Context, roleID uint, userID *uint) (bool, error) {
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	result, err := models.RemoveRoleFromUser(tracer.Tracer, int(roleID), int(*userID))
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
+// Enabledisableuser is the resolver for the enabledisableuser field.
+func (r *mutationResolver) Enabledisableuser(ctx context.Context, userID uint, status bool) (bool, error) {
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	resp, err := models.ActivateDeactivateUser(tracer.Tracer, userID, status)
+	if err != nil {
+		return false, err
+	}
+
+	return resp, nil
 }
 
 // Addprojectuser is the resolver for the addprojectuser field.
 func (r *mutationResolver) Addprojectuser(ctx context.Context, userID uint, projectID uint) (bool, error) {
-	panic(fmt.Errorf("not implemented: Addprojectuser - addprojectuser"))
+	db := r.DB         // databse connection
+	tracer := r.Tracer // otel jaeger tracer
+
+	var project models.Project
+	// first getting user and checking if it exists
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", projectID).First(&project).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, fmt.Errorf("Project Does not Exist")
+		}
+	}
+
+	//  check if user exists
+	user, err := models.GetUser(tracer.Tracer, userID)
+	if err != nil && user.ID == 0 {
+		return false, fmt.Errorf("User Does not exist or IAM is Down")
+	}
+
+	//  project user instance creating
+	pu := models.ProjectUsers{
+		ProjectID: project.ID,
+		UserUUID:  user.UUID,
+	}
+
+	//  start transaction to database
+	tx := db.WithContext(tracer.Tracer).Begin()
+
+	// add  data using transaction if values are valid
+	if err := tx.Create(&pu).Error; err != nil {
+		tx.Rollback()
+		return false, err
+	}
+
+	// close transaction
+	tx.Commit()
+	return true, nil
 }
 
 // Deleteprojectuser is the resolver for the deleteprojectuser field.
 func (r *mutationResolver) Deleteprojectuser(ctx context.Context, userID uint, projectID uint) (bool, error) {
-	panic(fmt.Errorf("not implemented: Deleteprojectuser - deleteprojectuser"))
+	db := r.DB         // databse connection
+	tracer := r.Tracer // otel jaeger tracer
+
+	//  check if user exists
+	user, err := models.GetUser(tracer.Tracer, userID)
+	if err != nil && user.ID == 0 {
+		return false, fmt.Errorf("User Does not exist or IAM is Down")
+	}
+
+	//  start transaction to delete
+	tx := db.WithContext(tracer.Tracer).Begin()
+
+	var pu models.ProjectUsers
+	// first getting user and checking if it exists
+	if err := db.WithContext(tracer.Tracer).Where("project_id = ? AND user_uuid = ?", projectID, user.UUID).First(&pu).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, fmt.Errorf("Project User Instance Does Not Exist")
+		}
+	}
+
+	// add  data using transaction if values are valid
+	if err := tx.Delete(&pu).Error; err != nil {
+		tx.Rollback()
+		return false, err
+	}
+
+	// close transaction
+	tx.Commit()
+	return true, nil
 }
 
 // Projects is the resolver for getting list of projects field.
@@ -155,6 +298,7 @@ func (r *queryResolver) Projects(ctx context.Context, page uint, size uint) ([]*
 	}
 	project := result.([]models.Project)
 
+	fmt.Println(project_get)
 	// filtering response data according to filtered defined struct
 	// return error if anything happens
 	if err := mapstructure.Decode(project, &project_get); err != nil {
@@ -187,14 +331,84 @@ func (r *queryResolver) Project(ctx context.Context, id uint) (*model.Project, e
 	return &project_get, nil
 }
 
+// Userprojects is the resolver for the userprojects field.
+func (r *queryResolver) Userprojects(ctx context.Context, userID uint) ([]*model.Project, error) {
+	db := r.DB         // databse connection
+	tracer := r.Tracer // otel jaeger tracer
+
+	//  check if user exists
+	user, err := models.GetUser(tracer.Tracer, userID)
+	if err != nil && user.ID == 0 {
+		return nil, fmt.Errorf("User Does not exist or IAM is Down")
+	}
+
+	var projects []model.Project
+	query_string := `SELECT DISTINCT projects.id, projects.name,projects.description, projects.uuid
+			FROM projects
+			INNER JOIN project_users pu ON projects.id = pu.project_id
+			WHERE pu.user_uuid = ?;`
+	if res := db.WithContext(tracer.Tracer).Raw(query_string, user.UUID).Scan(&projects); res.Error != nil {
+		return nil, err
+	}
+
+	ptrSlice := make([]*model.Project, len(projects))
+	for i, project := range projects {
+		ptr := project // Create a new local variable to hold the role
+		ptrSlice[i] = &ptr
+	}
+
+	return ptrSlice, nil
+}
+
+// Roles is the resolver for the roles field.
+func (r *queryResolver) Roles(ctx context.Context) ([]*model.Role, error) {
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	roles, err := models.GetAppRoles(tracer.Tracer)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	ptrSlice := make([]*model.Role, len(roles))
+	for i, role := range roles {
+		ptr := role // Create a new local variable to hold the role
+		ptrSlice[i] = &ptr
+	}
+	return ptrSlice, nil
+}
+
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, page uint, size uint) ([]*model.UserGet, error) {
-	panic(fmt.Errorf("not implemented: Users - users"))
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	users, err := models.GetUsers(tracer.Tracer, page, size)
+	if err != nil {
+		return nil, err
+	}
+
+	ptrSlice := make([]*model.UserGet, len(users))
+	for i, user := range users {
+		ptr := user // Create a new local variable to hold the role
+		ptrSlice[i] = &ptr
+	}
+	return ptrSlice, nil
 }
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id uint) (*model.UserGet, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
+	tracer := r.Tracer //otel tracer span and context
+
+	//  creating user via Api call to blue Admin
+	user, err := models.GetUser(tracer.Tracer, id)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return user, nil
 }
 
 // Mutation returns MutationResolver implementation.
@@ -205,3 +419,13 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//     it when you're done.
+//   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *queryResolver) Projectusers(ctx context.Context, projectID uint) ([]*model.UserGet, error) {
+	panic(fmt.Errorf("not implemented: Projectusers - projectusers"))
+}

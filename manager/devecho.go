@@ -91,6 +91,8 @@ func graph_echo_run(env string) {
 	}))
 
 	setupRoutes(app)
+	_, ok := models.LoginBlueAdmin()
+	fmt.Println(ok)
 	// starting on provided port
 	go func(app *echo.Echo) {
 		//  Http serving port

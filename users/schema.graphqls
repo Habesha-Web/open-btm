@@ -17,22 +17,31 @@ input UpdateProjectInput {
 	  id: Int!
 	  name: String!
 	  description: String!
-
 	}
-
-
-
 
 type User {
     Email: String!
     Password: String!
 }
 
+type Role {
+  id: Int!
+  name: String!
+  description: String!
+  active: Boolean!
+}
+
+
 input UserInput {
     Email: String!
     Password: String!
 }
 
+input UserUdateInput {
+    Email: String!
+    UUID:  String!
+    Disabled: Boolean!
+}
 
 type UserGet {
     ID: Int!
@@ -48,7 +57,13 @@ type Query {
   # Retrieve a specific Project by its ID
   project(id: Int!): Project!
 
-    # Retrieve a paginated list of projects
+  # Retrieve a specific Project by its ID
+  userprojects(user_id: Int!): [Project!]!
+
+  # Retrieve a paginated list of projects
+  #create paginated items
+  roles: [Role!]!
+
   #create paginated items
   users(page:Int!, size: Int!): [UserGet!]!
 
@@ -72,10 +87,16 @@ type Mutation {
   createuser(input: UserInput!): UserGet!
 
   # Update an existing project
-  updateuser(input: UserInput!): UserGet!
+  updateuser(input: UserUdateInput!, user_id: Int!): Boolean!
+  changeresetuserpassword(password: String!, email: String! ,reset: Boolean!): Boolean!
 
   # Delete an project by its ID
   deleteuser(id: Int!): Boolean!
+
+  # add,remove user roles and enable disable user
+  adduserrole(role_id: Int!, user_id: Int): Boolean!
+  removeuserrole(role_id: Int!, user_id: Int): Boolean!
+  enabledisableuser(user_id: Int!, status: Boolean!): Boolean!
 
   # add and delete user project
   addprojectuser(user_id: Int!, project_id: Int!): Boolean!

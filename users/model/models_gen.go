@@ -20,6 +20,13 @@ type Project struct {
 type Query struct {
 }
 
+type Role struct {
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Active      bool   `json:"active"`
+}
+
 type UpdateProjectInput struct {
 	ID          uint   `json:"id"`
 	Name        string `json:"name"`
@@ -40,4 +47,10 @@ type UserGet struct {
 type UserInput struct {
 	Email    string `json:"Email"`
 	Password string `json:"Password"`
+}
+
+type UserUdateInput struct {
+	Email    string `json:"Email"`
+	UUID     string `json:"UUID"`
+	Disabled bool   `json:"Disabled"`
 }

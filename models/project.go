@@ -18,9 +18,8 @@ type Project struct {
 }
 
 type ProjectUsers struct {
-	*gorm.Model
 	ID        uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
-	UserUUID  string `gorm:"not null; unique; " json:"user_uuid,omitempty"`
+	UserUUID  string `gorm:"not null; " json:"user_uuid,omitempty"`
 	ProjectID uint   `gorm:"foreignkey:ProjectID OnDelete:SET NULL" json:"project_id,omitempty" swaggertype:"number"`
 }
 

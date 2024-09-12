@@ -181,7 +181,7 @@ func ReturnSessionDatabase(dbname string) (*gorm.DB, error) {
 		DBSession = db
 	case "sqlite":
 		//  this is sqlite connection
-		dsn := fmt.Sprintf("%v %v", configs.AppConfig.Get("SQLLITE_URI_NO_DB"), dbname)
+		dsn := fmt.Sprintf("%v-%v.db", configs.AppConfig.Get("SQLLITE_URI_NO_DB"), dbname)
 		fmt.Println(dsn)
 		db, _ := gorm.Open(sqlite.Open(dsn), &gorm.Config{
 			DisableForeignKeyConstraintWhenMigrating: true,
