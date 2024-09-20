@@ -47,8 +47,7 @@ var (
 func otelechospanstarter(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		routeName := ctx.Path() + "_" + strings.ToLower(ctx.Request().Method)
-		val := fmt.Sprintf("%v-root", routeName)
-		tracer, span := observe.EchoAppSpanner(ctx, val)
+		tracer, span := observe.EchoAppSpanner(ctx, fmt.Sprintf("%v-root", routeName))
 		ctx.Set("tracer", &observe.RouteTracer{Tracer: tracer, Span: span})
 
 		// Process request
@@ -57,7 +56,6 @@ func otelechospanstarter(next echo.HandlerFunc) echo.HandlerFunc {
 			return err
 		}
 
-		span.SetAttributes(attribute.String("response", string(ctx.Response().Status)))
 		span.End()
 		return nil
 	}
@@ -100,6 +98,7 @@ func graph_echo_run(env string) {
 		StackSize: 1 << 10, // 1 KB
 		LogLevel:  log.ERROR,
 	}))
+
 	//  prometheus metrics middleware
 	app.Use(echoprometheus.NewMiddleware("echo_blue"))
 
@@ -137,12 +136,19 @@ func SetupRoutes(app *echo.Echo) {
 	// the Otel spanner middleware
 	app.Use(otelechospanstarter)
 
+	app.Use(middleware.BodyDump(func(ctx echo.Context, reqBody, resBody []byte) {
+		//  Geting tracer
+		tracer := ctx.Get("tracer").(*observe.RouteTracer)
+		tracer.Span.SetAttributes(attribute.String("request", string(reqBody)))
+		tracer.Span.SetAttributes(attribute.String("response", string(resBody)))
+	}))
+
 	// db session injection
 	app.Use(dbsessioninjection)
 
 	app.GET("/", func(c echo.Context) error {
-			return c.String(http.StatusOK, "Hello, World!")
-		})
+		return c.String(http.StatusOK, "Hello, World!")
+	})
 
 	gapp := app.Group("/api/v1")
 

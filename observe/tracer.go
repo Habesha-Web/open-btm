@@ -66,10 +66,9 @@ func EchoAppSpanner(ctx echo.Context, span_name string) (context.Context, oteltr
 	id := gen.String()
 
 	//  getting request body
-
 	trace, span := AppTracer.Start(ctx.Request().Context(), span_name,
 		oteltrace.WithAttributes(attribute.String("id", id)),
-		oteltrace.WithAttributes(attribute.String("request", string(ctx.Request().RequestURI))),
+		// oteltrace.WithAttributes(attribute.String("request", string(ctx.Request().RequestURI))),
 	)
 	return trace, span
 }
