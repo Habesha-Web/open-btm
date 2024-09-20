@@ -785,5 +785,4 @@ func ParseJWTToken(jwtToken string) (UserClaim, error) {
 		return response_b, nil
 	}
 	return response_a, nil
-
 }

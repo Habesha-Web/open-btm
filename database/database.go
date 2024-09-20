@@ -156,7 +156,6 @@ func ReturnSessionDatabase(dbname string) (*gorm.DB, error) {
 	switch app_env {
 	case "postgres":
 		dsn := fmt.Sprintf("%v dbname=%v sslmode=disable", configs.AppConfig.Get("POSTGRES_URI_NO_DB"), dbname)
-		fmt.Println(dsn)
 		db, err := gorm.Open(postgres.New(postgres.Config{
 			DSN:                  dsn,
 			PreferSimpleProtocol: true, // disables implicit prepared statement usage,
@@ -182,7 +181,6 @@ func ReturnSessionDatabase(dbname string) (*gorm.DB, error) {
 	case "sqlite":
 		//  this is sqlite connection
 		dsn := fmt.Sprintf("%v-%v.db", configs.AppConfig.Get("SQLLITE_URI_NO_DB"), dbname)
-		fmt.Println(dsn)
 		db, _ := gorm.Open(sqlite.Open(dsn), &gorm.Config{
 			DisableForeignKeyConstraintWhenMigrating: true,
 			Logger:                                   newLogger,

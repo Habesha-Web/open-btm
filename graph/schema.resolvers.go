@@ -56,10 +56,9 @@ func (r *mutationResolver) Updatesprint(ctx context.Context, input model.UpdateS
 
 	// startng update transaction
 	var sprint models.Sprint
-	sprint.ID = uint(input.ID)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&sprint, sprint.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(input.ID)).First(&sprint).Error; err != nil {
 		return nil, err
 	}
 
@@ -87,10 +86,9 @@ func (r *mutationResolver) Deletesprint(ctx context.Context, id uint) (bool, err
 
 	// startng update transaction
 	var sprint models.Sprint
-	sprint.ID = uint(id)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&sprint, sprint.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(id)).First(&sprint).Error; err != nil {
 		return false, err
 	}
 
@@ -118,10 +116,9 @@ func (r *mutationResolver) Createrequirementsprint(ctx context.Context, requirem
 
 	// updateing requirement transaction
 	var sprint models.Sprint
-	sprint.ID = sprintID
 
 	// Check if the sprint record exists
-	if err := db.WithContext(tracer.Tracer).First(&sprint, sprint.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", sprintID).First(&sprint).Error; err != nil {
 		return nil, err
 	}
 	// Check if the requirement record exists
@@ -157,10 +154,9 @@ func (r *mutationResolver) Deleterequirementsprint(ctx context.Context, requirem
 
 	// updateing requirement transaction
 	var sprint models.Sprint
-	sprint.ID = sprintID
 
 	// Check if the sprint record exists
-	if err := db.WithContext(tracer.Tracer).First(&sprint, sprint.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", sprintID).First(&sprint).Error; err != nil {
 		return nil, err
 	}
 
@@ -227,10 +223,9 @@ func (r *mutationResolver) Updaterequirement(ctx context.Context, input model.Up
 
 	// startng update transaction
 	var requirement models.Requirement
-	requirement.ID = uint(input.ID)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&requirement, requirement.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(input.ID)).First(&requirement).Error; err != nil {
 		return nil, err
 	}
 
@@ -258,10 +253,9 @@ func (r *mutationResolver) Deleterequirement(ctx context.Context, id uint) (bool
 
 	// startng update transaction
 	var requirement models.Requirement
-	requirement.ID = uint(id)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&requirement, requirement.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(id)).First(&requirement).Error; err != nil {
 		return false, err
 	}
 
@@ -320,10 +314,9 @@ func (r *mutationResolver) Updatetest(ctx context.Context, input model.UpdateTes
 
 	// startng update transaction
 	var test models.Test
-	test.ID = uint(input.ID)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&test, test.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(input.ID)).First(&test).Error; err != nil {
 		return nil, err
 	}
 
@@ -351,10 +344,9 @@ func (r *mutationResolver) Deletetest(ctx context.Context, id uint) (bool, error
 
 	// startng update transaction
 	var test models.Test
-	test.ID = uint(id)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&test, test.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(id)).First(&test).Error; err != nil {
 		return false, err
 	}
 
@@ -412,10 +404,9 @@ func (r *mutationResolver) Updatetestset(ctx context.Context, input model.Update
 
 	// startng update transaction
 	var testset models.Testset
-	testset.ID = uint(input.ID)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&testset, testset.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(input.ID)).First(&testset).Error; err != nil {
 		return nil, err
 	}
 
@@ -443,10 +434,9 @@ func (r *mutationResolver) Deletetestset(ctx context.Context, id uint) (bool, er
 
 	// startng update transaction
 	var testset models.Testset
-	testset.ID = uint(id)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&testset, testset.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(id)).First(&testset).Error; err != nil {
 		return false, err
 	}
 
@@ -474,10 +464,9 @@ func (r *mutationResolver) Createtesttestset(ctx context.Context, testID uint, t
 
 	// updateing test transaction
 	var testset models.Testset
-	testset.ID = testsetID
 
 	// Check if the testset record exists
-	if err := db.WithContext(tracer.Tracer).First(&testset, testset.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", testsetID).First(&testset).Error; err != nil {
 		return nil, err
 	}
 	// Check if the test record exists
@@ -513,10 +502,9 @@ func (r *mutationResolver) Deletetesttestset(ctx context.Context, testID uint, t
 
 	// updateing test transaction
 	var testset models.Testset
-	testset.ID = testsetID
 
 	// Check if the testset record exists
-	if err := db.WithContext(tracer.Tracer).First(&testset, testset.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", testsetID).First(&testset).Error; err != nil {
 		return nil, err
 	}
 
@@ -553,10 +541,9 @@ func (r *mutationResolver) Updatetesttestset(ctx context.Context, input model.Up
 
 	// startng update transaction
 	var testtestset models.TestTestset
-	testtestset.ID = uint(input.ID)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&testtestset, testtestset.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(input.ID)).First(&testtestset).Error; err != nil {
 		return nil, err
 	}
 
@@ -587,10 +574,9 @@ func (r *mutationResolver) Createissuetesttestset(ctx context.Context, issueID u
 
 	// updateing issue transaction
 	var testtestset models.TestTestset
-	testtestset.ID = testTestsetID
 
 	// Check if the testtestset record exists
-	if err := db.WithContext(tracer.Tracer).First(&testtestset, testtestset.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", testTestsetID).First(&testtestset).Error; err != nil {
 		return nil, err
 	}
 	// Check if the issue record exists
@@ -629,7 +615,7 @@ func (r *mutationResolver) Deleteissuetesttestset(ctx context.Context, issueID u
 	testtestset.ID = testTestsetID
 
 	// Check if the testtestset record exists
-	if err := db.WithContext(tracer.Tracer).First(&testtestset, testtestset.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", testTestsetID).First(&testtestset).Error; err != nil {
 		return nil, err
 	}
 
@@ -697,10 +683,9 @@ func (r *mutationResolver) Updateissue(ctx context.Context, input model.UpdateIs
 
 	// startng update transaction
 	var issue models.Issue
-	issue.ID = uint(input.ID)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&issue, issue.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(input.ID)).First(&issue).Error; err != nil {
 		return nil, err
 	}
 
@@ -728,10 +713,9 @@ func (r *mutationResolver) Deleteissue(ctx context.Context, id uint) (bool, erro
 
 	// startng update transaction
 	var issue models.Issue
-	issue.ID = uint(id)
 
 	// Check if the record exists
-	if err := db.WithContext(tracer.Tracer).First(&issue, issue.ID).Error; err != nil {
+	if err := db.WithContext(tracer.Tracer).Where("id = ?", uint(id)).First(&issue).Error; err != nil {
 		return false, err
 	}
 

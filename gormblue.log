@@ -155,3 +155,102 @@
 
 2024/09/12 12:28:17 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:122
 [0m[33m[0.761ms] [34;1m[rows:3][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 20
+
+2024/09/19 08:49:09 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.470ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 08:49:09 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.899ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 08:49:25 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/users/schema.resolvers.go:335
+[0m[33m[0.473ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE id = 0 AND `projects`.`deleted_at` IS NULL ORDER BY `projects`.`id` LIMIT 1
+
+2024/09/19 08:49:29 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.116ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 08:49:29 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.699ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 08:50:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[1.209ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 08:50:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.315ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 08:50:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.507ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 08:50:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.660ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 08:50:25 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.547ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 08:50:25 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.734ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 08:50:29 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/users/schema.resolvers.go:335
+[0m[33m[0.452ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE id = 0 AND `projects`.`deleted_at` IS NULL ORDER BY `projects`.`id` LIMIT 1
+
+2024/09/19 08:50:33 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.108ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 08:50:33 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.548ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 09:04:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.583ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 09:04:10 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.466ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 09:05:12 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.303ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 09:05:12 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.110ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 09:06:39 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.117ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 09:06:39 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.632ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 09:45:15 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.746ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 09:45:15 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.813ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 09:46:07 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:129
+[0m[33m[0.605ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 0
+
+2024/09/19 09:46:07 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.594ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 09:46:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.181ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 09:46:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:122
+[0m[33m[1.300ms] [34;1m[rows:3][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 15
+
+2024/09/19 10:05:28 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/manager/devecho.go:175
+[0m[33m[0.729ms] [34;1m[rows:1][0m SELECT * FROM `projects` WHERE id = 1 AND `projects`.`deleted_at` IS NULL ORDER BY `projects`.`id` LIMIT 1
+
+2024/09/19 10:05:28 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:36
+[0m[33m[3.168ms] [34;1m[rows:1][0m INSERT INTO `sprints` (`created_at`,`updated_at`,`deleted_at`,`name`,`description`) VALUES ("2024-09-19 10:05:28.512","2024-09-19 10:05:28.512",NULL,"Sprint One Test","Adding Simple Sprint Data") RETURNING `id`,`id`
+
+2024/09/19 10:10:27 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/manager/devecho.go:173
+[0m[33m[1.946ms] [34;1m[rows:1][0m SELECT * FROM `projects` WHERE id = 1 AND `projects`.`deleted_at` IS NULL ORDER BY `projects`.`id` LIMIT 1
+
+2024/09/19 10:10:27 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:36
+[0m[33m[1.655ms] [34;1m[rows:1][0m INSERT INTO `sprints` (`created_at`,`updated_at`,`deleted_at`,`name`,`description`) VALUES ("2024-09-19 10:10:27.138","2024-09-19 10:10:27.138",NULL,"Sprint Two Test","Adding Simple Sprint Data") RETURNING `id`,`id`
+
+2024/09/19 15:12:15 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[0.204ms] [34;1m[rows:1][0m SELECT count(*) FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/19 15:12:15 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:122
+[0m[33m[1.102ms] [34;1m[rows:3][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL ORDER BY id asc LIMIT 15
+
+2024/09/19 15:12:27 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/users/schema.resolvers.go:335
+[0m[33m[1.501ms] [34;1m[rows:1][0m SELECT * FROM `projects` WHERE id = 1 AND `projects`.`deleted_at` IS NULL ORDER BY `projects`.`id` LIMIT 1

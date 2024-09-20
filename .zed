@@ -1,0 +1,10 @@
+{
+    "debug":    {
+        "name": "Main Go Debug",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+         "program": "${workspaceFolder}",
+        "args": ["run","--env=dev"]
+        }
+}

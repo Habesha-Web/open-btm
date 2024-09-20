@@ -28,7 +28,13 @@ func NewEnvFile(configFolder string) {
 	AppConfig = EnvConfig{
 		defaultPath: configFolder,
 	}
-	AppConfig.read()
+	if err := godotenv.Load(); err != nil {
+		fmt.Println(err.Error())
+	}
+	app_env := os.Getenv("APP_ENV")
+	if app_env != "test" && app_env != "render" {
+		AppConfig.read()
+	}
 }
 
 func (e *EnvConfig) read() {
@@ -67,6 +73,20 @@ func (e *EnvConfig) Get(key string) string {
 }
 
 func (e *EnvConfig) SetEnv(key string) {
+	AppConfig = EnvConfig{
+		defaultPath: "./configs",
+		prodFlag:    key,
+	}
+	if err := godotenv.Load(); err != nil {
+		fmt.Println(err.Error())
+	}
+	app_env := os.Getenv("APP_ENV")
+	if app_env != "test" && app_env != "render" {
+		AppConfig.read()
+	}
+}
+
+func (e *EnvConfig) SetManEnv(key string) {
 	AppConfig = EnvConfig{
 		defaultPath: "./configs",
 		prodFlag:    key,

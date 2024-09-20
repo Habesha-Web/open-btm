@@ -9,7 +9,11 @@ import (
 )
 
 func InitDatabase() {
-	configs.NewEnvFile("./configs")
+	app_env := configs.AppConfig.Get("APP_ENV")
+	if app_env != "test" {
+		configs.NewEnvFile("./configs")
+	}
+
 	database, err := database.ReturnSession()
 	fmt.Println("Connection Opened to Database")
 	if err == nil {
@@ -24,6 +28,7 @@ func InitDatabase() {
 		panic(err)
 	}
 }
+
 func MigrateToPojectDatabase(dbname string) {
 	configs.NewEnvFile("./configs")
 	database, err := database.ReturnSessionDatabase(dbname)
@@ -47,17 +52,32 @@ func MigrateToPojectDatabase(dbname string) {
 
 func CleanDatabase() {
 	configs.NewEnvFile("./configs")
-	database, err := database.ReturnSession()
+	mdb, err := database.ReturnSession()
+	var projects []Project
+
+	mdb.Model(&Project{}).Find(&projects)
+
 	if err == nil {
 		fmt.Println("Connection Opened to Database")
+		for _, proj := range projects {
+			db, err := database.ReturnSessionDatabase(proj.DatabaseName)
+			if err != nil {
+				db.Migrator().DropTable(
+					&Sprint{},
+					&Requirement{},
+					&Test{},
+					&Testset{},
+					&TestTestset{},
+					&Issue{},
+				)
+			}
+
+		}
+
 		fmt.Println("Dropping Models if Exist")
-		database.Migrator().DropTable(
-			&Sprint{},
-			&Requirement{},
-			&Test{},
-			&Testset{},
-			&TestTestset{},
-			&Issue{},
+		mdb.Migrator().DropTable(
+			&Project{},
+			&ProjectUsers{},
 		)
 		fmt.Println("Database Cleaned")
 	} else {
