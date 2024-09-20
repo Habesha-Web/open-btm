@@ -3,6 +3,7 @@ package manager
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"strconv"
@@ -138,6 +139,10 @@ func SetupRoutes(app *echo.Echo) {
 
 	// db session injection
 	app.Use(dbsessioninjection)
+
+	app.GET("/", func(c echo.Context) error {
+			return c.String(http.StatusOK, "Hello, World!")
+		})
 
 	gapp := app.Group("/api/v1")
 
