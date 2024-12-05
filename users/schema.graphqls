@@ -1,113 +1,114 @@
-directive @hasProjectRole(roles: [String!]!) on FIELD_DEFINITION
+    directive @hasProjectRole(roles: [String!]!) on FIELD_DEFINITION
 
-# Define the input type for pagination
-type Project {
-	 id: Int!
-	 name: String!
-	 description: String!
-	 uuid: String!
-	}
+    enum ProjectStatus {
+        Planning
+        Inprogress
+        Completed
+    }
 
-input CreateProjectInput {
-	  name: String!
-	  description: String!
-	}
+    # Define the input type for pagination
+    type Project {
+    	 id: Int!
+    	 name: String!
+    	 description: String!
+    	 uuid: String!
+         status: ProjectStatus!
+    	}
 
-input UpdateProjectInput {
-	  id: Int!
-	  name: String!
-	  description: String!
-	}
+    input CreateProjectInput {
+    	  name: String!
+    	  description: String!
+    	}
 
-type User {
-    Email: String!
-    Password: String!
-}
+    input UpdateProjectInput {
+    	  id: Int!
+    	  name: String!
+    	  description: String!
+          status: ProjectStatus!
+    	}
 
-type Role {
-  id: Int!
-  name: String!
-  description: String!
-  active: Boolean!
-}
+    type User {
+        Email: String!
+        Password: String!
+    }
 
-
-input UserInput {
-    Email: String!
-    Password: String!
-}
-
-input UserUdateInput {
-    Email: String!
-    UUID:  String!
-    Disabled: Boolean!
-}
-
-type UserGet {
-    ID: Int!
-    Email: String!
-    UUID:  String!
-}
-
-type LoginResponse {
-    AccessToken: String!
-    RefreshToken: String!
-}
-
-type Query {
-  #login
-  login(email: String!,password: String!): LoginResponse!
-
-  # Retrieve a paginated list of projects
-  #create paginated items
-  projects(page:Int!, size: Int!): [Project!]!
-
-  # Retrieve a specific Project by its ID
-  project(id: Int!): Project!
-
-  # Retrieve a specific Project by its ID
-  userprojects(user_id: Int!): [Project!]!
-
-  # Retrieve a paginated list of projects
-  #create paginated items
-  roles: [Role!]!
-
-  #create paginated items
-  users(page:Int!, size: Int!): [UserGet!]!
-
-  # Retrieve a specific Project by its ID
-  user(id: Int!): UserGet!
-}
+    type Role {
+        id: Int!
+        name: String!
+        description: String!
+        active: Boolean!
+    }
 
 
-type Mutation {
-  # Create a new project
-  #create object
-  createproject(input: CreateProjectInput!): Project!
+    input UserInput {
+        Email: String!
+        Password: String!
+    }
 
-  # Update an existing project
-  updateproject(input: UpdateProjectInput!): Project!
+    input UserUdateInput {
+        Email: String!
+        UUID:  String!
+        Disabled: Boolean!
+    }
 
-  # Delete an project by its ID
-  deleteproject(id: Int!): Boolean!
+    type UserGet {
+        ID: Int!
+        Email: String!
+        UUID:  String!
+    }
 
-  #create user
-  createuser(input: UserInput!): UserGet!
+    type Query {
 
-  # Update an existing project
-  updateuser(input: UserUdateInput!, user_id: Int!): Boolean!
-  changeresetuserpassword(password: String!, email: String! ,reset: Boolean!): Boolean!
+    # Retrieve a paginated list of projects
+    #create paginated items
+    projects(page:Int!, size: Int!): [Project!]!
 
-  # Delete an project by its ID
-  deleteuser(id: Int!): Boolean!
+    # Retrieve a specific Project by its ID
+    project(id: Int!): Project!
 
-  # add,remove user roles and enable disable user
-  adduserrole(role_id: Int!, user_id: Int): Boolean!
-  removeuserrole(role_id: Int!, user_id: Int): Boolean!
-  enabledisableuser(user_id: Int!, status: Boolean!): Boolean!
+    # Retrieve a specific Project by its ID
+    userprojects(user_id: Int!): [Project!]!
 
-  # add and delete user project
-  addprojectuser(user_id: Int!, project_id: Int!): Boolean!
-  deleteprojectuser(user_id: Int!, project_id: Int!): Boolean!
+    # Retrieve a paginated list of projects
+    #create paginated items
+    roles: [Role!]!
 
-}
+    #create paginated items
+    users(page:Int!, size: Int!): [UserGet!]!
+
+    # Retrieve a specific Project by its ID
+    user(id: Int!): UserGet!
+    }
+
+
+    type Mutation {
+    # Create a new project
+    #create object
+    createproject(input: CreateProjectInput!): Project!
+
+    # Update an existing project
+    updateproject(input: UpdateProjectInput!): Project!
+
+    # Delete an project by its ID
+    deleteproject(id: Int!): Boolean!
+
+    #create user
+    createuser(input: UserInput!): UserGet!
+
+    # Update an existing project
+    updateuser(input: UserUdateInput!, user_id: Int!): Boolean!
+    changeresetuserpassword(password: String!, email: String! ,reset: Boolean!): Boolean!
+
+    # Delete an project by its ID
+    deleteuser(id: Int!): Boolean!
+
+    # add,remove user roles and enable disable user
+    adduserrole(role_id: Int!, user_id: Int): Boolean!
+    removeuserrole(role_id: Int!, user_id: Int): Boolean!
+    enabledisableuser(user_id: Int!, status: Boolean!): Boolean!
+
+    # add and delete user project
+    addprojectuser(user_id: Int!, project_id: Int!): Boolean!
+    deleteprojectuser(user_id: Int!, project_id: Int!): Boolean!
+
+    }

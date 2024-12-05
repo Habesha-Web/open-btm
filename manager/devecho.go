@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/labstack/echo-contrib/echoprometheus"
@@ -17,6 +18,8 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"open-btm.com/auth"
+	"open-btm.com/btmtasks"
 	"open-btm.com/configs"
 	"open-btm.com/database"
 	"open-btm.com/graph"
@@ -83,16 +86,19 @@ func graph_echo_run(env string) {
 	configs.AppConfig.SetEnv(env)
 
 	// Starting Otel Global tracer
-	tp := observe.InitTracer()
-	defer func() {
-		if err := tp.Shutdown(context.Background()); err != nil {
-			log.Printf("Error shutting down tracer provider: %v", err)
-		}
-	}()
+	// tp := observe.InitTracer()
+	// defer func() {
+	// 	if err := tp.Shutdown(context.Background()); err != nil {
+	// 		log.Printf("Error shutting down tracer provider: %v", err)
+	// 	}
+	// }()
 
 	// starting the app
 	app := echo.New()
 
+	// cros orign
+	app.Use(middleware.CORS())
+	app.Use(middleware.Logger())
 	// Recover incase of panic attacks
 	app.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
 		StackSize: 1 << 10, // 1 KB
@@ -107,12 +113,22 @@ func graph_echo_run(env string) {
 
 	_, ok := models.LoginBlueAdmin()
 	if !ok {
-		panic("No Auth for the app")
+		time.Sleep(5 * time.Second)
+		models.LoginBlueAdmin()
 	}
 	SetupRoutes(app)
 
+	// Getting route privileges
+	err := models.MiddlewareJSON(context.Background())
+	if err != nil {
+		fmt.Println("No role matrix file, App will not work as intended")
+	}
+	//  starting background tasks
+	btmtasks.ScheduledTasks()
+
 	// starting on provided port
 	go func(app *echo.Echo) {
+
 		//  Http serving port
 		HTTP_PORT := configs.AppConfig.Get("HTTP_PORT")
 		app.Logger.Fatal(app.Start("0.0.0.0:" + HTTP_PORT))
@@ -131,10 +147,33 @@ func graph_echo_run(env string) {
 
 }
 
+func NextAuthValidator(key string, ctx echo.Context) (bool, error) {
+	// Print the current route's path (URL pattern)
+	// fmt.Println("Route path:", ctx.Path())
+
+	if key != "login" {
+
+		// fmt.Println("Role required: ", models.EndpointJSON[ctx.Path()])
+		// Parse JWT token
+		usr_claim, _ := models.ParseJWTToken(key)
+
+		// Print user roles (assuming usr_claim.Roles is a field in your JWT claim structure)
+		fmt.Println("User Roles:", usr_claim.Roles)
+	}
+
+	return true, nil
+}
+
 func SetupRoutes(app *echo.Echo) {
 
 	// the Otel spanner middleware
 	app.Use(otelechospanstarter)
+
+	// Authentication middleware
+	app.Use(middleware.KeyAuthWithConfig(middleware.KeyAuthConfig{
+		KeyLookup: "header:x-app-token",
+		Validator: NextAuthValidator,
+	}))
 
 	app.Use(middleware.BodyDump(func(ctx echo.Context, reqBody, resBody []byte) {
 		//  Geting tracer
@@ -146,13 +185,18 @@ func SetupRoutes(app *echo.Echo) {
 	// db session injection
 	app.Use(dbsessioninjection)
 
+	// hello world add
 	app.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
-	})
+	}).Name = "hello_world"
 
+	// creating api group
 	gapp := app.Group("/api/v1")
 
-	// playgroundHandler := playground.Handler("GraphQL", "/query")
+	// login route mounting
+	gapp.POST("/login", auth.LoginUser).Name = "login_btm"
+
+	// project directive cfg
 	cfg := graph.Config{
 		Directives: graph.DirectiveRoot{
 			HasRole: graph.HasRoleDirective,
@@ -199,7 +243,7 @@ func SetupRoutes(app *echo.Echo) {
 		)
 		graphqlHandler.ServeHTTP(ctx.Response(), ctx.Request())
 		return nil
-	})
+	}).Name = "btm_project"
 
 	//  admin graphql  config
 	pcfg := users.Config{
@@ -208,7 +252,7 @@ func SetupRoutes(app *echo.Echo) {
 		},
 	}
 
-	//  This is GraphQL project graphql route
+	//  This is GraphQL project admin graphql route
 	gapp.POST("/admin", func(ctx echo.Context) error {
 
 		//  Geting dbsession
@@ -227,7 +271,7 @@ func SetupRoutes(app *echo.Echo) {
 
 		graphqlHandler.ServeHTTP(ctx.Response(), ctx.Request())
 		return nil
-	})
+	}).Name = "btm_project_admin"
 
 }
 

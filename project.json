@@ -1,0 +1,77 @@
+{
+  "project_name": "open-btm",
+  "app_name": "btm",
+  "back_tick": "`",
+  "models": [
+    {
+      "name": "Project",
+      "back_tick": "`",
+      "rln_model": [],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "annotation": "gorm:\"not null;\" json:\"name,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "DatabaseName",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"database_name,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"description,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"status,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        }
+      ]
+    },
+    {
+      "name": "ProjectUsers",
+      "back_tick": "`",
+      "rln_model": [],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "UserUUID",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"user_uuid,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "ProjectID",
+          "type": "string",
+          "annotation": "gorm:\"foreignkey:ProjectID OnDelete:SET NULL\" json:\"project_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$true$false"
+        }
+      ]
+    }
+  ]
+}

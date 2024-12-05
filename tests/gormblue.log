@@ -775,3 +775,114 @@
 
 2024/09/20 10:00:18 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:78
 [0m[33m[4.126ms] [34;1m[rows:0][0m DROP TABLE IF EXISTS `projects`
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[0.182ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="projects"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[13.547ms] [34;1m[rows:0][0m CREATE TABLE `projects` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`database_name` text NOT NULL,`description` text NOT NULL,`uuid` text,CONSTRAINT `uni_projects_uuid` UNIQUE (`uuid`),CONSTRAINT `uni_projects_name` UNIQUE (`name`),CONSTRAINT `uni_projects_database_name` UNIQUE (`database_name`))
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[5.440ms] [34;1m[rows:0][0m CREATE INDEX `idx_projects_deleted_at` ON `projects`(`deleted_at`)
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[0.065ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="project_users"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[4.316ms] [34;1m[rows:0][0m CREATE TABLE `project_users` (`id` integer PRIMARY KEY AUTOINCREMENT,`user_uuid` text NOT NULL,`project_id` integer)
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/users/schema.resolvers.go:39
+[0m[33m[1.420ms] [34;1m[rows:1][0m INSERT INTO `projects` (`created_at`,`updated_at`,`deleted_at`,`name`,`database_name`,`description`,`uuid`) VALUES ("2024-09-21 13:31:21.864","2024-09-21 13:31:21.864",NULL,"Project One","pntilae","First Project","01921422-dc08-7e53-b3f1-5e36de66f280") RETURNING `id`,`id`
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[0.100ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="sprints"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[3.765ms] [34;1m[rows:0][0m CREATE TABLE `sprints` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[4.056ms] [34;1m[rows:0][0m CREATE INDEX `idx_sprints_deleted_at` ON `sprints`(`deleted_at`)
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[0.078ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="requirements"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[4.352ms] [34;1m[rows:0][0m CREATE TABLE `requirements` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL,`sprint_id` integer)
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[3.989ms] [34;1m[rows:0][0m CREATE INDEX `idx_requirements_deleted_at` ON `requirements`(`deleted_at`)
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[0.081ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="tests"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[5.123ms] [34;1m[rows:0][0m CREATE TABLE `tests` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`steps` text NOT NULL,`expected_result` text NOT NULL,`requirement_id` integer)
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[4.064ms] [34;1m[rows:0][0m CREATE INDEX `idx_tests_deleted_at` ON `tests`(`deleted_at`)
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[0.117ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="testsets"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[4.040ms] [34;1m[rows:0][0m CREATE TABLE `testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`description` text NOT NULL)
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[4.126ms] [34;1m[rows:0][0m CREATE INDEX `idx_testsets_deleted_at` ON `testsets`(`deleted_at`)
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[0.158ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testsets"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[5.453ms] [34;1m[rows:0][0m CREATE TABLE `test_testsets` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`test_id` integer,`testset_id` integer,`run_status` text NOT NULL,`run` text NOT NULL,`sevierity` text NOT NULL)
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[6.449ms] [34;1m[rows:0][0m CREATE INDEX `idx_test_testsets_deleted_at` ON `test_testsets`(`deleted_at`)
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[0.121ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="issues"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[6.483ms] [34;1m[rows:0][0m CREATE TABLE `issues` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`issue_name` text NOT NULL,`issue_status` text NOT NULL,`issue_description` text NOT NULL)
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[6.467ms] [34;1m[rows:0][0m CREATE INDEX `idx_issues_deleted_at` ON `issues`(`deleted_at`)
+
+2024/09/21 13:31:21 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[0.171ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="test_testset_issues"
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:37
+[0m[33m[6.127ms] [34;1m[rows:0][0m CREATE TABLE `test_testset_issues` (`test_testset_id` integer,`issue_id` integer,PRIMARY KEY (`test_testset_id`,`issue_id`))
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/manager/devecho.go:179
+[0m[33m[1.321ms] [34;1m[rows:1][0m SELECT * FROM `projects` WHERE id = 1 AND `projects`.`deleted_at` IS NULL ORDER BY `projects`.`id` LIMIT 1
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:36
+[0m[33m[2.807ms] [34;1m[rows:1][0m INSERT INTO `sprints` (`created_at`,`updated_at`,`deleted_at`,`name`,`description`) VALUES ("2024-09-21 13:31:21.954","2024-09-21 13:31:21.954",NULL,"Sprint 1","First sprint") RETURNING `id`,`id`
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/manager/devecho.go:179
+[0m[33m[1.585ms] [34;1m[rows:1][0m SELECT * FROM `projects` WHERE id = 1 AND `projects`.`deleted_at` IS NULL ORDER BY `projects`.`id` LIMIT 1
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/graph/schema.resolvers.go:36
+[0m[33m[11.963ms] [34;1m[rows:1][0m INSERT INTO `sprints` (`created_at`,`updated_at`,`deleted_at`,`name`,`description`) VALUES ("2024-09-21 13:31:21.981","2024-09-21 13:31:21.981",NULL,"Sprint 2","Second sprint") RETURNING `id`,`id`
+
+2024/09/21 13:31:21 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/manager/devecho.go:179
+[0m[33m[1.768ms] [34;1m[rows:1][0m SELECT * FROM `projects` WHERE id = 1 AND `projects`.`deleted_at` IS NULL ORDER BY `projects`.`id` LIMIT 1
+
+2024/09/21 13:31:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:122
+[0m[33m[2.977ms] [34;1m[rows:2][0m SELECT * FROM `sprints` WHERE `sprints`.`deleted_at` IS NULL ORDER BY id asc LIMIT 10
+
+2024/09/21 13:31:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/common/common.go:110
+[0m[33m[2.316ms] [34;1m[rows:1][0m SELECT count(*) FROM `sprints` WHERE `sprints`.`deleted_at` IS NULL
+
+2024/09/21 13:31:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:58
+[0m[33m[1.282ms] [34;1m[rows:1][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/09/21 13:31:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:78
+[0m[33m[0.200ms] [34;1m[rows:1][0m PRAGMA foreign_keys
+
+2024/09/21 13:31:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:78
+[0m[33m[6.845ms] [34;1m[rows:0][0m DROP TABLE IF EXISTS `project_users`
+
+2024/09/21 13:31:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:78
+[0m[33m[9.430ms] [34;1m[rows:0][0m DROP TABLE IF EXISTS `projects`

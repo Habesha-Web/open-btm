@@ -21,6 +21,7 @@ var (
 	AdminAccessToken string
 	salt_a           string
 	salt_b           string
+	EndpointJSON     map[string]string
 )
 
 // ############################################################################
@@ -28,9 +29,10 @@ var (
 // ############################################################################
 type UserClaim struct {
 	jwt.RegisteredClaims
-	Email string   `json:"email"`
-	Roles []string `json:"roles"`
-	UUID  string   `json:"uuid"`
+	Email  string   `json:"email"`
+	Roles  []string `json:"roles"`
+	UUID   string   `json:"uuid"`
+	UserID int      `json:"user_id"`
 }
 
 type PostData struct {
@@ -104,6 +106,8 @@ func CreateUser(ctx context.Context, user model.User) (*model.UserGet, error) {
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -135,6 +139,58 @@ func CreateUser(ctx context.Context, user model.User) (*model.UserGet, error) {
 	}
 
 	return &response_user, nil
+}
+func MiddlewareJSON(ctx context.Context) error {
+
+	//  define var for response
+	var response struct {
+		Data map[string]string `json:"data"`
+	}
+	// Retrieve configuration values
+	url := configs.AppConfig.Get("BLUE_ADMIN_URI")
+	app_uuid := configs.AppConfig.Get("BLUE_ADMIN_UUID")
+
+	// Create an HTTP client with OpenTelemetry middleware
+	client := createHTTPClient()
+
+	// Build and send the request
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/clientmatrixpath/%v", url, app_uuid), nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if AdminAccessToken == "" {
+		if _, ok := LoginBlueAdmin(); ok != true {
+			return fmt.Errorf("Error logging in to IAM please correct your config credntial files")
+		}
+	}
+
+	//  Set Token Header
+	req.Header.Set("X-APP-TOKEN", AdminAccessToken)
+
+	//  Make request to IAM
+	resp, err := client.Do(req)
+	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
+		return err
+	}
+	defer resp.Body.Close()
+	// Read and unmarshal response
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	// Unmarshal JSON to struct
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return err
+	}
+
+	// Finally setting EndpointJSON for security Middleware and returning nil for no error
+	EndpointJSON = response.Data
+	return nil
 }
 
 func GetUsers(ctx context.Context, page, size uint) ([]model.UserGet, error) {
@@ -168,6 +224,8 @@ func GetUsers(ctx context.Context, page, size uint) ([]model.UserGet, error) {
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -218,6 +276,8 @@ func GetUser(ctx context.Context, user_id uint) (*model.UserGet, error) {
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -268,6 +328,8 @@ func UpdateUser(ctx context.Context, user model.UserUdateInput, user_id int) (bo
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return false, err
 	}
 	defer resp.Body.Close()
@@ -314,6 +376,8 @@ func ResetPasswordUser(ctx context.Context, password string, email string) (bool
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return false, err
 	}
 	defer resp.Body.Close()
@@ -350,6 +414,8 @@ func DeleteUser(ctx context.Context, user_id uint) (bool, error) {
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return false, err
 	}
 	defer resp.Body.Close()
@@ -391,6 +457,8 @@ func CheckUser(ctx context.Context, uuid string) (uint, error) {
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return 0, err
 	}
 	defer resp.Body.Close()
@@ -436,6 +504,8 @@ func ActivateDeactivateUser(ctx context.Context, user_id uint, status bool) (boo
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return false, err
 	}
 	defer resp.Body.Close()
@@ -473,6 +543,8 @@ func AddRoleToUser(ctx context.Context, role_id, user_id int) (bool, error) {
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return false, err
 	}
 	defer resp.Body.Close()
@@ -510,6 +582,8 @@ func RemoveRoleFromUser(ctx context.Context, role_id, user_id int) (bool, error)
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return false, err
 	}
 	defer resp.Body.Close()
@@ -552,6 +626,8 @@ func GetAppRoles(ctx context.Context) ([]model.Role, error) {
 	//  Make request to IAM
 	resp, err := client.Do(req)
 	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
 		return nil, err
 	}
 	defer resp.Body.Close()

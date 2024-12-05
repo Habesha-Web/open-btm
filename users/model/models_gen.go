@@ -2,24 +2,26 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type CreateProjectInput struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
-}
-
-type LoginResponse struct {
-	AccessToken  string `json:"AccessToken"`
-	RefreshToken string `json:"RefreshToken"`
 }
 
 type Mutation struct {
 }
 
 type Project struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	UUID        string `json:"uuid"`
+	ID          uint          `json:"id"`
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	UUID        string        `json:"uuid"`
+	Status      ProjectStatus `json:"status"`
 }
 
 type Query struct {
@@ -33,9 +35,10 @@ type Role struct {
 }
 
 type UpdateProjectInput struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID          uint          `json:"id"`
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	Status      ProjectStatus `json:"status"`
 }
 
 type User struct {
@@ -58,4 +61,47 @@ type UserUdateInput struct {
 	Email    string `json:"Email"`
 	UUID     string `json:"UUID"`
 	Disabled bool   `json:"Disabled"`
+}
+
+type ProjectStatus string
+
+const (
+	ProjectStatusPlanning   ProjectStatus = "Planning"
+	ProjectStatusInprogress ProjectStatus = "Inprogress"
+	ProjectStatusCompleted  ProjectStatus = "Completed"
+)
+
+var AllProjectStatus = []ProjectStatus{
+	ProjectStatusPlanning,
+	ProjectStatusInprogress,
+	ProjectStatusCompleted,
+}
+
+func (e ProjectStatus) IsValid() bool {
+	switch e {
+	case ProjectStatusPlanning, ProjectStatusInprogress, ProjectStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e ProjectStatus) String() string {
+	return string(e)
+}
+
+func (e *ProjectStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ProjectStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ProjectStatus", str)
+	}
+	return nil
+}
+
+func (e ProjectStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
