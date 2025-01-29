@@ -6,7 +6,7 @@
     {
       "name": "Sprint",
       "back_tick": "`",
-      "rln_model": ["Requirement$otm"],
+      "rln_model": ["Requirement$otm", "Document$otm"],
       "fields": [
         {
           "name": "ID",
@@ -30,10 +30,37 @@
           "curd_flag": "true$true$true$true$false$false"
         },
         {
+          "name": "Status",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"status,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "StartDate",
+          "type": "time.Time",
+          "annotation": "json:\"start_date,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Duration",
+          "type": "uint",
+          "annotation": "json:\"duration,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
           "name": "Requirements",
           "type": "[]Requirement",
-          "annotation": "gorm:\"association_foreignkey:RequirementID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"requirements,omitempty\"",
+          "annotation": "gorm:\"association_foreignkey:SprintID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"requirements,omitempty\"",
           "mongo_annotation": "",
+          "curd_flag": "true$false$false$false$true$false"
+        },
+        {
+          "name": "Documents",
+          "type": "[]Document",
+          "annotation": "gorm:\"association_foreignkey:SprintID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"documents,omitempty\"",
           "curd_flag": "true$false$false$false$true$false"
         }
       ]
@@ -41,7 +68,7 @@
     {
       "name": "Requirement",
       "back_tick": "`",
-      "rln_model": ["Test$otm"],
+      "rln_model": ["Test$otm", "Document$otm"],
       "fields": [
         {
           "name": "ID",
@@ -65,17 +92,51 @@
           "curd_flag": "true$true$true$true$false$false"
         },
         {
+          "name": "Purpose",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"purpose,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"status,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "BussinessValue",
+          "type": "uint",
+          "annotation": "gorm:\"not null; \" json:\"bussiness_value,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "AssignedTo",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"assigned_to,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
           "name": "SprintID",
           "type": "uint",
           "annotation": "gorm:\"foreignkey:SprintID OnDelete:SET NULL\" json:\"sprint_id,omitempty\" swaggertype:\"number\"",
           "mongo_annotation": "",
-          "curd_flag": "false$false$false$false$true$false"
+          "curd_flag": "false$true$false$false$true$false"
         },
         {
           "name": "Tests",
           "type": "[]Test",
-          "annotation": "gorm:\"association_foreignkey:TestID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"tests,omitempty\"",
+          "annotation": "gorm:\"association_foreignkey:RequirementID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"tests,omitempty\"",
           "curd_flag": "false$false$false$false$true$false"
+        },
+        {
+          "name": "Documents",
+          "type": "[]Document",
+          "annotation": "gorm:\"association_foreignkey:RequirementID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"documents,omitempty\"",
+          "curd_flag": "true$false$false$false$true$false"
         }
       ]
     },
@@ -99,6 +160,13 @@
           "curd_flag": "true$true$true$true$false$false"
         },
         {
+          "name": "Description",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"description,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
           "name": "Steps",
           "type": "string",
           "annotation": "gorm:\"not null; \" json:\"steps,omitempty\"",
@@ -117,7 +185,7 @@
           "type": "uint",
           "annotation": "gorm:\"foreignkey:RequirementID OnDelete:SET NULL\" json:\"requirement_id,omitempty\" swaggertype:\"number\"",
           "mongo_annotation": "",
-          "curd_flag": "false$false$false$false$true$false"
+          "curd_flag": "false$true$false$false$true$false"
         }
       ]
     },
@@ -157,9 +225,9 @@
       ]
     },
     {
-      "name": "TestTestset",
+      "name": "TestInstance",
       "back_tick": "`",
-      "rln_model": ["Issue$mtm"],
+      "rln_model": ["Issue$otm", "TestRun$otm"],
       "fields": [
         {
           "name": "ID",
@@ -183,6 +251,47 @@
           "curd_flag": "false$false$false$false$true$false"
         },
         {
+          "name": "Severity",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"severity,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "Issues",
+          "type": "[]Issue",
+          "annotation": "gorm:\"association_foreignkey:TestInstanceID; constraint:OnUpdate:CASCADE; OnDelete:SET NULL;\" json:\"issues,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$false$false$false$true"
+        },
+        {
+          "name": "TestRuns",
+          "type": "[]TestRun",
+          "annotation": "gorm:\"association_foreignkey:TestInstanceID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"test_runs,omitempty\"",
+          "curd_flag": "false$false$false$false$true$false"
+        }
+      ]
+    },
+    {
+      "name": "TestRun",
+      "back_tick": "`",
+      "rln_model": ["Issue$otm", "Document$otm"],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "TestInstanceID",
+          "type": "uint",
+          "annotation": "gorm:\"foreignkey:TestID OnDelete:SET NULL\" json:\"test_instance_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "false$false$false$false$true$false"
+        },
+        {
           "name": "RunStatus",
           "type": "string",
           "annotation": "gorm:\"not null; \" json:\"run_status,omitempty\"",
@@ -190,25 +299,24 @@
           "curd_flag": "true$true$true$true$false$false"
         },
         {
-          "name": "Run",
+          "name": "Result",
           "type": "string",
           "annotation": "gorm:\"not null; \" json:\"run,omitempty\"",
           "mongo_annotation": "",
           "curd_flag": "true$true$true$true$false$false"
         },
         {
-          "name": "Sevierity",
-          "type": "string",
-          "annotation": "gorm:\"not null; \" json:\"sevierity,omitempty\"",
-          "mongo_annotation": "",
-          "curd_flag": "true$true$true$true$false$false"
-        },
-        {
           "name": "Issues",
           "type": "[]Issue",
-          "annotation": "gorm:\"many2many:test_testset_issues; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;\" json:\"issues,omitempty\"",
+          "annotation": "gorm:\"association_foreignkey:TestID; constraint:OnUpdate:CASCADE; OnDelete:SET NULL;\" json:\"issues,omitempty\"",
           "mongo_annotation": "",
           "curd_flag": "true$false$false$false$false$true"
+        },
+        {
+          "name": "Documents",
+          "type": "[]Document",
+          "annotation": "gorm:\"association_foreignkey:RequirementID constraint:OnUpdate:SET NULL OnDelete:SET NULL\" json:\"documents,omitempty\"",
+          "curd_flag": "true$false$false$false$true$false"
         }
       ]
     },
@@ -223,6 +331,20 @@
           "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
           "mongo_annotation": "",
           "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "TestRunID",
+          "type": "uint",
+          "annotation": "gorm:\"foreignkey:TestRunID OnDelete:SET NULL\" json:\"test_run_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$false$false$true$false"
+        },
+        {
+          "name": "TestInstanceID",
+          "type": "uint",
+          "annotation": "gorm:\"foreignkey:TestID OnDelete:SET NULL\" json:\"test_instance_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "false$false$false$false$true$false"
         },
         {
           "name": "IssueName",
@@ -244,6 +366,55 @@
           "annotation": "gorm:\"not null; \" json:\"issue_description,omitempty\"",
           "mongo_annotation": "",
           "curd_flag": "true$true$true$true$false$false"
+        }
+      ]
+    },
+    {
+      "name": "Document",
+      "back_tick": "`",
+      "rln_model": [],
+      "fields": [
+        {
+          "name": "ID",
+          "type": "uint",
+          "annotation": "gorm:\"primaryKey;autoIncrement:true\" json:\"id,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$false$true$true$false$false"
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"issue_name,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "File_URL",
+          "type": "string",
+          "annotation": "gorm:\"not null; \" json:\"issue_status,omitempty\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$true$true$false$false"
+        },
+        {
+          "name": "RequirementID",
+          "type": "uint",
+          "annotation": "gorm:\"foreignkey:RequirementID OnDelete:SET NULL\" json:\"requirement_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$false$false$true$false"
+        },
+        {
+          "name": "SprintID",
+          "type": "uint",
+          "annotation": "gorm:\"foreignkey:SprintID OnDelete:SET NULL\" json:\"sprint_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$false$false$true$false"
+        },
+        {
+          "name": "RunID",
+          "type": "uint",
+          "annotation": "gorm:\"foreignkey:TestRunID OnDelete:SET NULL\" json:\"test_run_id,omitempty\" swaggertype:\"number\"",
+          "mongo_annotation": "",
+          "curd_flag": "true$true$false$false$true$false"
         }
       ]
     }

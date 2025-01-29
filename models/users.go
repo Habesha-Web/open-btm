@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-
 	"net/http"
 	"net/http/httptrace"
 
@@ -138,8 +137,15 @@ func CreateUser(ctx context.Context, user model.User) (*model.UserGet, error) {
 		return nil, err
 	}
 
+	_, err = AddRoleToUser(ctx, int(12), int(response_user.ID))
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
 	return &response_user, nil
 }
+
 func MiddlewareJSON(ctx context.Context) error {
 
 	//  define var for response
@@ -207,7 +213,59 @@ func GetUsers(ctx context.Context, page, size uint) ([]model.UserGet, error) {
 	client := createHTTPClient()
 
 	// Build and send the request
-	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/appusers?page=%v&size=%v&app_uuid=%v", url, page, size, app_uuid), nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/appuser?page=%v&size=%v&app_uuid=%v", url, page, size, app_uuid), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if AdminAccessToken == "" {
+		if _, ok := LoginBlueAdmin(); ok != true {
+			return nil, fmt.Errorf("Error logging in to IAM please correct your config credntial files")
+		}
+	}
+
+	//  Set Token Header
+	req.Header.Set("X-APP-TOKEN", AdminAccessToken)
+
+	//  Make request to IAM
+	resp, err := client.Do(req)
+	if err != nil {
+		_, ok := LoginBlueAdmin()
+		fmt.Print(ok)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Read and unmarshal response
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	// Unmarshal JSON to struct
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response.Data, nil
+}
+
+func GetDropUsers(ctx context.Context) ([]model.UserGet, error) {
+	//  define var for response
+	var response struct {
+		Data []model.UserGet `json:"data"`
+	}
+
+	// Retrieve configuration values
+	url := configs.AppConfig.Get("BLUE_ADMIN_URI")
+	app_uuid := configs.AppConfig.Get("BLUE_ADMIN_UUID")
+
+	// Create an HTTP client with OpenTelemetry middleware
+	client := createHTTPClient()
+
+	// Build and send the request
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/dropappusers?app_uuid=%v", url, app_uuid), nil)
 	if err != nil {
 		return nil, err
 	}

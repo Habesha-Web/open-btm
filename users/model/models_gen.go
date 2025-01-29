@@ -24,6 +24,11 @@ type Project struct {
 	Status      ProjectStatus `json:"status"`
 }
 
+type ProjectResponseGet struct {
+	Total    uint       `json:"total"`
+	Projects []*Project `json:"projects,omitempty"`
+}
+
 type Query struct {
 }
 
@@ -35,51 +40,60 @@ type Role struct {
 }
 
 type UpdateProjectInput struct {
-	ID          uint          `json:"id"`
-	Name        string        `json:"name"`
-	Description string        `json:"description"`
-	Status      ProjectStatus `json:"status"`
+	ID          uint           `json:"id"`
+	Name        *string        `json:"name,omitempty"`
+	Description *string        `json:"description,omitempty"`
+	Status      *ProjectStatus `json:"status,omitempty"`
 }
 
 type User struct {
-	Email    string `json:"Email"`
-	Password string `json:"Password"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type UserGet struct {
-	ID    uint   `json:"ID"`
-	Email string `json:"Email"`
-	UUID  string `json:"UUID"`
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	UUID     string `json:"uuid"`
+	Disabled bool   `json:"disabled"`
 }
 
 type UserInput struct {
-	Email    string `json:"Email"`
-	Password string `json:"Password"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type UserResponseGet struct {
+	Total uint       `json:"total"`
+	Users []*UserGet `json:"users,omitempty"`
 }
 
 type UserUdateInput struct {
-	Email    string `json:"Email"`
-	UUID     string `json:"UUID"`
-	Disabled bool   `json:"Disabled"`
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Disabled *bool   `json:"disabled,omitempty"`
 }
 
 type ProjectStatus string
 
 const (
 	ProjectStatusPlanning   ProjectStatus = "Planning"
-	ProjectStatusInprogress ProjectStatus = "Inprogress"
+	ProjectStatusInProgress ProjectStatus = "InProgress"
 	ProjectStatusCompleted  ProjectStatus = "Completed"
 )
 
 var AllProjectStatus = []ProjectStatus{
 	ProjectStatusPlanning,
-	ProjectStatusInprogress,
+	ProjectStatusInProgress,
 	ProjectStatusCompleted,
 }
 
 func (e ProjectStatus) IsValid() bool {
 	switch e {
-	case ProjectStatusPlanning, ProjectStatusInprogress, ProjectStatusCompleted:
+	case ProjectStatusPlanning, ProjectStatusInProgress, ProjectStatusCompleted:
 		return true
 	}
 	return false
@@ -89,7 +103,7 @@ func (e ProjectStatus) String() string {
 	return string(e)
 }
 
-func (e *ProjectStatus) UnmarshalGQL(v interface{}) error {
+func (e *ProjectStatus) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")

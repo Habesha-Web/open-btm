@@ -23,6 +23,7 @@ import (
 	"open-btm.com/configs"
 	"open-btm.com/database"
 	"open-btm.com/graph"
+
 	"open-btm.com/models"
 	"open-btm.com/observe"
 	"open-btm.com/users"
@@ -215,12 +216,14 @@ func SetupRoutes(app *echo.Echo) {
 		//  Getting Project Database Session
 		project_db, err := database.ReturnSession()
 		if err != nil {
+			fmt.Println(err)
 			return nil
 		}
 
 		// Getting Project database Name
 		var project models.Project
 		if res := project_db.Model(&models.Project{}).Preload(clause.Associations).Where("id = ?", uint(project_id)).First(&project); res.Error != nil {
+			fmt.Println(res.Error)
 			return res.Error
 		}
 

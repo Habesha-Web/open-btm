@@ -12,7 +12,7 @@ type TestTestset struct {
 	RunStatus string  `gorm:"not null; " json:"run_status,omitempty"`
 	Run       string  `gorm:"not null; " json:"run,omitempty"`
 	Sevierity string  `gorm:"not null; " json:"sevierity,omitempty"`
-	Issues    []Issue `gorm:"many2many:test_testset_issues; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;" json:"issues,omitempty"`
+	Issues    []Issue `gorm:"many2many:test_instances_issues; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;" json:"issues,omitempty"`
 }
 
 // TestTestsetPost model info
@@ -30,7 +30,7 @@ type TestTestsetGet struct {
 	RunStatus string  `gorm:"not null; " json:"run_status,omitempty"`
 	Run       string  `gorm:"not null; " json:"run,omitempty"`
 	Sevierity string  `gorm:"not null; " json:"sevierity,omitempty"`
-	Issues    []Issue `gorm:"many2many:test_testset_issues; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;" json:"issues,omitempty"`
+	Issues    []Issue `gorm:"many2many:test_instances_issues; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;" json:"issues,omitempty"`
 }
 
 // TestTestsetPut model info

@@ -7,6 +7,8 @@ import "gorm.io/gorm"
 type Issue struct {
 	*gorm.Model
 	ID               uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
+	TestRunID        uint   `gorm:"foreignkey:TestRunID OnDelete:SET NULL" json:"test_run_id,omitempty" swaggertype:"number"`
+	TestInstanceID   uint   `gorm:"foreignkey:TestInstanceID OnDelete:SET NULL" json:"test_instance_id,omitempty" swaggertype:"number"`
 	IssueName        string `gorm:"not null; " json:"issue_name,omitempty"`
 	IssueStatus      string `gorm:"not null; " json:"issue_status,omitempty"`
 	IssueDescription string `gorm:"not null; " json:"issue_description,omitempty"`

@@ -8,6 +8,7 @@ type Test struct {
 	*gorm.Model
 	ID             uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
 	Name           string `gorm:"not null; " json:"name,omitempty"`
+	Description    string `gorm:"not null; " json:"description,omitempty"`
 	Steps          string `gorm:"not null; " json:"steps,omitempty"`
 	ExpectedResult string `gorm:"not null; " json:"expected_result,omitempty"`
 	RequirementID  uint   `gorm:"foreignkey:RequirementID OnDelete:SET NULL" json:"requirement_id,omitempty" swaggertype:"number"`
@@ -18,7 +19,9 @@ type Test struct {
 type TestPost struct {
 	Name           string `gorm:"not null; " json:"name,omitempty"`
 	Steps          string `gorm:"not null; " json:"steps,omitempty"`
+	Description    string `gorm:"not null; " json:"description,omitempty"`
 	ExpectedResult string `gorm:"not null; " json:"expected_result,omitempty"`
+	RequirementID  uint   `gorm:"foreignkey:RequirementID OnDelete:SET NULL" json:"requirement_id,omitempty" swaggertype:"number"`
 }
 
 // TestGet model info
@@ -27,6 +30,7 @@ type TestGet struct {
 	ID             uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
 	Name           string `gorm:"not null; " json:"name,omitempty"`
 	Steps          string `gorm:"not null; " json:"steps,omitempty"`
+	Description    string `gorm:"not null; " json:"description,omitempty"`
 	ExpectedResult string `gorm:"not null; " json:"expected_result,omitempty"`
 }
 
@@ -36,6 +40,7 @@ type TestPut struct {
 	ID             uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
 	Name           string `gorm:"not null; " json:"name,omitempty"`
 	Steps          string `gorm:"not null; " json:"steps,omitempty"`
+	Description    string `gorm:"not null; " json:"description,omitempty"`
 	ExpectedResult string `gorm:"not null; " json:"expected_result,omitempty"`
 }
 
@@ -45,5 +50,6 @@ type TestPatch struct {
 	ID             uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
 	Name           string `gorm:"not null; " json:"name,omitempty"`
 	Steps          string `gorm:"not null; " json:"steps,omitempty"`
+	Description    string `gorm:"not null; " json:"description,omitempty"`
 	ExpectedResult string `gorm:"not null; " json:"expected_result,omitempty"`
 }

@@ -1,4 +1,3 @@
-
 package common
 
 import (
@@ -24,6 +23,7 @@ type ResponsePagination struct {
 	Size    uint        `json:"size"`
 	Pages   uint        `json:"pages"`
 }
+
 func Pagination(db *gorm.DB, queryModel interface{}, responseObjectModel interface{}, page uint, size uint, tracer context.Context) (ResponsePagination, interface{}, error) {
 	//  protection against requesting large amount of data
 	//  set to 50
@@ -92,8 +92,8 @@ func Pagination(db *gorm.DB, queryModel interface{}, responseObjectModel interfa
 }
 
 func PaginationPureModel(db *gorm.DB, queryModel interface{}, responseObjectModel interface{}, page uint, size uint, tracer context.Context) (ResponsePagination, interface{}, error) {
-	if size > 50 {
-		size = 50
+	if size > 100 {
+		size = 100
 	}
 	count_channel := make(chan int64)
 	str_chann := make(chan string)
@@ -119,16 +119,16 @@ func PaginationPureModel(db *gorm.DB, queryModel interface{}, responseObjectMode
 	go func(comm <-chan string) {
 		if page == 1 {
 			if tracer != nil {
-				db.WithContext(tracer).Model(&queryModel).Order("id asc").Limit(int(size)).Offset(0).Find(&responseObjectModel)
+				db.WithContext(tracer).Model(&queryModel).Order("id asc").Limit(int(size)).Offset(0).Scan(&responseObjectModel)
 			} else {
-				db.WithContext(tracer).Model(&queryModel).Order("id asc").Limit(int(size)).Offset(0).Find(&responseObjectModel)
+				db.WithContext(tracer).Model(&queryModel).Order("id asc").Limit(int(size)).Offset(0).Scan(&responseObjectModel)
 			}
 			response_page = 1
 		} else {
 			if tracer != nil {
-				db.WithContext(tracer).Model(&queryModel).Order("id asc").Limit(int(size)).Offset(int(offset)).Find(&responseObjectModel)
+				db.WithContext(tracer).Model(&queryModel).Order("id asc").Limit(int(size)).Offset(int(offset)).Scan(&responseObjectModel)
 			} else {
-				db.WithContext(tracer).Model(&queryModel).Order("id asc").Limit(int(size)).Offset(int(offset)).Find(&responseObjectModel)
+				db.WithContext(tracer).Model(&queryModel).Order("id asc").Limit(int(size)).Offset(int(offset)).Scan(&responseObjectModel)
 			}
 			// response_channel <- loc_resp
 			response_page = int64(page)
@@ -211,4 +211,3 @@ func PaginationPureModelFilterOneToMany(db *gorm.DB, queryModel interface{}, res
 	}
 	return result, responseObjectModel, nil
 }
-

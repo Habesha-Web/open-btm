@@ -9,7 +9,7 @@ type Testset struct {
 	ID          uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
 	Name        string `gorm:"not null; " json:"name,omitempty"`
 	Description string `gorm:"not null; " json:"description,omitempty"`
-	Tests       []Test `gorm:"many2many:test_testsets; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;" json:"tests,omitempty"`
+	Tests       []Test `gorm:"many2many:test_instances; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;" json:"tests,omitempty"`
 }
 
 // TestsetPost model info
@@ -25,7 +25,7 @@ type TestsetGet struct {
 	ID          uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
 	Name        string `gorm:"not null; " json:"name,omitempty"`
 	Description string `gorm:"not null; " json:"description,omitempty"`
-	Tests       []Test `gorm:"many2many:test_testsets; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;" json:"tests,omitempty"`
+	Tests       []Test `gorm:"many2many:test_instances; constraint:OnUpdate:CASCADE; OnDelete:CASCADE;" json:"tests,omitempty"`
 }
 
 // TestsetPut model info

@@ -886,3 +886,63 @@
 
 2024/09/21 13:31:22 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:78
 [0m[33m[9.430ms] [34;1m[rows:0][0m DROP TABLE IF EXISTS `projects`
+
+2024/12/20 14:20:48 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[0.052ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="projects"
+
+2024/12/20 14:20:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[7.227ms] [34;1m[rows:0][0m CREATE TABLE `projects` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`database_name` text NOT NULL,`description` text NOT NULL,`uuid` text,`status` text NOT NULL DEFAULT "Planning",CONSTRAINT `uni_projects_name` UNIQUE (`name`),CONSTRAINT `uni_projects_database_name` UNIQUE (`database_name`),CONSTRAINT `uni_projects_uuid` UNIQUE (`uuid`))
+
+2024/12/20 14:20:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[3.947ms] [34;1m[rows:0][0m CREATE INDEX `idx_projects_deleted_at` ON `projects`(`deleted_at`)
+
+2024/12/20 14:20:48 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[0.073ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="project_users"
+
+2024/12/20 14:20:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[3.303ms] [34;1m[rows:0][0m CREATE TABLE `project_users` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`user_uuid` text NOT NULL,`project_id` integer)
+
+2024/12/20 14:20:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[3.490ms] [34;1m[rows:0][0m CREATE INDEX `idx_project_users_deleted_at` ON `project_users`(`deleted_at`)
+
+2024/12/20 14:20:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:60
+[0m[33m[0.329ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/12/20 14:20:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:82
+[0m[33m[0.056ms] [34;1m[rows:1][0m PRAGMA foreign_keys
+
+2024/12/20 14:20:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:82
+[0m[33m[3.969ms] [34;1m[rows:0][0m DROP TABLE IF EXISTS `project_users`
+
+2024/12/20 14:20:48 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:82
+[0m[33m[4.206ms] [34;1m[rows:0][0m DROP TABLE IF EXISTS `projects`
+
+2024/12/20 14:51:07 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[0.044ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="projects"
+
+2024/12/20 14:51:07 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[8.386ms] [34;1m[rows:0][0m CREATE TABLE `projects` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` text NOT NULL,`database_name` text NOT NULL,`description` text NOT NULL,`uuid` text,`status` text NOT NULL DEFAULT "Planning",CONSTRAINT `uni_projects_name` UNIQUE (`name`),CONSTRAINT `uni_projects_database_name` UNIQUE (`database_name`),CONSTRAINT `uni_projects_uuid` UNIQUE (`uuid`))
+
+2024/12/20 14:51:07 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[3.360ms] [34;1m[rows:0][0m CREATE INDEX `idx_projects_deleted_at` ON `projects`(`deleted_at`)
+
+2024/12/20 14:51:07 logger.go:180: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[0.040ms] [34;1m[rows:-][0m SELECT count(*) FROM sqlite_master WHERE type='table' AND name="project_users"
+
+2024/12/20 14:51:07 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[3.321ms] [34;1m[rows:0][0m CREATE TABLE `project_users` (`id` integer PRIMARY KEY AUTOINCREMENT,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`user_uuid` text NOT NULL,`project_id` integer)
+
+2024/12/20 14:51:08 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:20
+[0m[33m[4.139ms] [34;1m[rows:0][0m CREATE INDEX `idx_project_users_deleted_at` ON `project_users`(`deleted_at`)
+
+2024/12/20 14:51:08 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:60
+[0m[33m[0.399ms] [34;1m[rows:0][0m SELECT * FROM `projects` WHERE `projects`.`deleted_at` IS NULL
+
+2024/12/20 14:51:08 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:82
+[0m[33m[0.061ms] [34;1m[rows:1][0m PRAGMA foreign_keys
+
+2024/12/20 14:51:08 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:82
+[0m[33m[3.877ms] [34;1m[rows:0][0m DROP TABLE IF EXISTS `project_users`
+
+2024/12/20 14:51:08 logger.go:182: [32m/home/bushu/Documents/goland/open-btm/models/init.go:82
+[0m[33m[4.796ms] [34;1m[rows:0][0m DROP TABLE IF EXISTS `projects`

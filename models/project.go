@@ -15,10 +15,11 @@ type Project struct {
 	DatabaseName string `gorm:"not null; unique; " json:"database_name,omitempty"`
 	Description  string `gorm:"not null; " json:"description,omitempty"`
 	UUID         string `gorm:"constraint:not null; unique; type:string;" json:"uuid"`
-	Status       string `gorm:"not null; default:'planning';" json:"status,omitempty"`
+	Status       string `gorm:"not null; default:'Planning';" json:"status,omitempty"`
 }
 
 type ProjectUsers struct {
+	*gorm.Model
 	ID        uint   `gorm:"primaryKey;autoIncrement:true" json:"id,omitempty"`
 	UserUUID  string `gorm:"not null; " json:"user_uuid,omitempty"`
 	ProjectID uint   `gorm:"foreignkey:ProjectID OnDelete:SET NULL" json:"project_id,omitempty" swaggertype:"number"`

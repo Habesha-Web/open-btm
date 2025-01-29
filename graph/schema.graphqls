@@ -1,264 +1,534 @@
 directive @hasRole(roles: [String!]!) on FIELD_DEFINITION
 
+scalar Time
+
 # Define the input type for pagination
+
+enum SprintStatus {
+    Ongoing
+    Open
+    Closed
+}
+
 type Sprint {
-	 id: Int!
-	 name: String!
-	 description: String!
-	}
+    id: Int!
+    name: String!
+    description: String!
+    status: String!
+    start_date: String!
+    duration: Int!
+    requirements: [Requirement!]!
+    documents: [Document!]!
+}
+
+type GetSprints {
+    total: Int!
+    sprints: [Sprint!]!
+}
 
 input CreateSprintInput {
-	  name: String!
-	  description: String!
-	}
+    name: String!
+    description: String!
+    status: SprintStatus!
+    start_date: String!
+    duration: Int!
+}
 
 input UpdateSprintInput {
-	  id: Int!
-	  name: String!
-	  description: String!
-	}
+    id: Int!
+    name: String
+    description: String
+    status: SprintStatus
+    start_date: String
+    duration: Int
+}
 
+enum RequirementStatus {
+    Open
+    Completed
+    Amended
+}
 
 type Requirement {
-	 id: Int!
-	 name: String!
-	 description: String!
-	 sprint_id: Int!
-	}
+    id: Int!
+    name: String!
+    description: String!
+    purpose: String!
+    status: String!
+    bussiness_value: Int!
+    assigned_to: String!
+    sprint_id: Int
+    tests: [Test!]
+    documents: [Document!]
+}
+
+type GetRequirements {
+    total: Int!
+    requirements: [Requirement!]!
+}
 
 input CreateRequirementInput {
-	  name: String!
-	  description: String!
-	}
+    name: String!
+    description: String!
+    purpose: String!
+    status: RequirementStatus!
+    bussiness_value: Int!
+    assigned_to: String!
+    sprint_id: Int!
+}
 
 input UpdateRequirementInput {
-	  id: Int!
-	  name: String!
-	  description: String!
-	}
+    id: Int!
+    name: String
+    description: String
+    purpose: String
+    status: RequirementStatus
+    bussiness_value: Int
+    assigned_to: String
+    sprint_id: Int
+}
 
 type Test {
-	 id: Int!
-	 name: String!
-	 steps: String!
-	 expected_result: String!
-	 requirement_id: String!
-	}
+    id: Int!
+    name: String!
+    description: String!
+    steps: String!
+    expected_result: String!
+    requirement_id: Int
+}
+
+type DropTest {
+    id: Int!
+    name: String!
+}
+
+type GetTests {
+    total: Int!
+    tests: [Test!]!
+}
 
 input CreateTestInput {
-	  name: String!
-	  steps: String!
-	  expectedresult: String!
+    name: String!
+    description: String!
+    steps: String!
+    expected_result: String!
+    requirement_id: Int
 }
 
 input UpdateTestInput {
-	  id: Int!
-	  name: String!
-	  steps: String!
-	  expected_result: String!
-	}
+    id: Int!
+    name: String
+    description: String
+    steps: String
+    expected_result: String
+    requirement_id: Int
+}
 
 type Testset {
-	 id: Int!
-	 name: String!
-	 description: String!
+    id: Int!
+    name: String!
+    description: String!
+    tests: [Test!]
+}
+
+type GetTestsets {
+    total: Int!
+    testsets: [Testset!]!
 }
 
 input CreateTestsetInput {
-	  name: String!
-	  description: String!
-	}
+    name: String!
+    description: String!
+}
 
 input UpdateTestsetInput {
-	  id: Int!
-	  name: String!
-	  description: String!
-	}
+    id: Int!
+    name: String
+    description: String
+}
 
 enum Severity {
-  Critical
-  High
-  Medium
-  Low
+    Critical
+    High
+    Medium
+    Low
+}
+
+type TestInstance {
+    id: Int!
+    test_id: Int!
+    testset_id: Int!
+    severity: String!
+    issues: [Issue!]
+    test_runs: [TestRun!]
+}
+
+type GetTestInstances {
+    total: Int!
+    test_instances: [TestInstance!]!
+}
+
+type InstanceTest {
+    id: Int!
+    name: String!
+    description: String!
+    steps: String!
+    expected_result: String!
+    severity: Severity!
+}
+
+type GetTestSetInstances {
+    total: Int!
+    testsettests: [InstanceTest!]!
+}
+
+input CreateTestInstanceInput {
+    test_id: Int!
+    testset_id: Int!
+    severity: Severity
+}
+
+input CreateBatchTestInstanceInput {
+    testset_id: Int!
+    test_ids: [Int!]!
+    severity: Severity
+}
+
+input UpdateTestInstanceInput {
+    id: Int!
+    test_id: Int
+    testset_id: Int
+    severity: Severity
 }
 
 enum RunStatus {
-  NA       # Not Applicable
-  NR       # Not Required
-  Blocked
-  Passed
-  Failed
-  InProgress
+    NA # Not Applicable
+    NR # Not Required
+    Blocked
+    Passed
+    Failed
+    InProgress
 }
 
-
-type TestTestset {
-	 id: Int!
-	 test_id: String!
-	 testset_id: String!
-	 run_status: RunStatus!
-	 run: String!
-	 sevierity: Severity!
+type TestRun {
+    id: Int!
+    test_instance_id: Int!
+    run_status: String!
+    result: String!
+    created_at: Time
+    updated_at: Time
+    documents: [Document!]
 }
 
-input CreateTestTestsetInput {
-	  run_status: String!
-	  run: String!
-	  sevierity: String!
+type GetTestRuns {
+    total: Int!
+    test_runs: [TestRun!]!
 }
 
-input UpdateTestTestsetInput {
-	  id: Int!
-	  run_status: String!
-	  run: String!
-	  sevierity: String!
+input CreateTestRunInput {
+    test_instance_id: Int!
+    run_status: RunStatus!
+    result: String!
+}
+
+input UpdateTestRunInput {
+    id: Int!
+    run_status: RunStatus
+    result: String
 }
 
 enum IssueStatus {
-  Open
-  Fixed
-  Reopened
-  Closed
+    Open
+    Fixed
+    Reopened
+    Closed
 }
 
 type Issue {
-	 id: Int!
-	 issue_name: String!
-	 issue_status: IssueStatus!
-	 issue_description: String!
-	}
+    id: Int!
+    issue_name: String!
+    issue_status: String!
+    issue_description: String!
+    test_instance_id: Int
+    test_run_id: Int
+}
+
+type GetIssues {
+    total: Int!
+    issues: [Issue!]!
+}
 
 input CreateIssueInput {
-	  issue_name: String!
-	  issue_status: IssueStatus!
-	  issue_description: String!
-	}
+    issue_name: String!
+    issue_status: IssueStatus!
+    issue_description: String!
+    test_instance_id: Int
+    test_run_id: Int
+}
 
 input UpdateIssueInput {
-	  id: Int!
-	  issue_name: String!
-	  issue_status: IssueStatus!
-	  issue_description: String!
+    id: Int!
+    issue_name: String
+    issue_status: IssueStatus
+    issue_description: String
+    test_instance_id: Int
+    test_run_id: Int
+}
+
+type Document {
+    id: Int!
+    name: String!
+    file_url: String!
+    requirement_id: Int
+    sprint_id: Int
+    run_id: Int
+}
+
+type GetDocuments {
+    total: Int!
+    documents: [Document!]!
+}
+
+input CreateDocumentInput {
+    name: String!
+    file_url: String!
+    requirement_id: Int
+    sprint_id: Int
+    run_id: Int
+}
+
+input UpdateDocumentInput {
+    id: Int!
+    name: String
+    file_url: String
 }
 
 # Define the queries
 type Query {
+    # Retrieve a paginated list of sprints
+    #create paginated items
+    sprints(page: Int!, size: Int!): GetSprints!
 
-  # Retrieve a paginated list of sprints
-  #create paginated items
-  sprints(page:Int!, size: Int!): [Sprint!]!
+    # Retrieve a specific Sprint by its ID
+    sprint(id: Int!): Sprint!
 
-  # Retrieve a specific Sprint by its ID
-  sprint(id: Int!): Sprint!
+    #Get Sprint Requirements
+    sprintrequirements(
+        sprint_id: Int!
+        page: Int!
+        size: Int!
+    ): GetRequirements!
 
-  #Get Sprint Requirements
-  sprintrequirements(requirement_id: Int!, sprint_id: Int!, page: Int! ,size: Int!): [Requirement!]!
+    #Get Sprint Documents
+    sprintdocuments(sprint_id: Int!, page: Int!, size: Int!): GetDocuments!
+    # Retrieve a paginated list of requirements
+    #create paginated items
+    requirements(page: Int!, size: Int!): GetRequirements!
 
-  # Retrieve a paginated list of requirements
-  #create paginated items
-  requirements(page:Int!, size: Int!): [Requirement!]!
+    # Retrieve a specific Requirement by its ID
+    requirement(id: Int!): Requirement!
 
-  # Retrieve a specific Requirement by its ID
-  requirement(id: Int!): Requirement!
+    #Get Requirement Tests
+    requirementtests(requirement_id: Int!, page: Int!, size: Int!): GetTests!
 
-   # Retrieve a paginated list of tests
-  #create paginated items
-  tests(page:Int!, size: Int!): [Test!]!
+    #Get Requirement Documents
+    requirementdocuments(
+        requirement_id: Int!
+        page: Int!
+        size: Int!
+    ): GetDocuments!
 
-  # Retrieve a specific Test by its ID
-  test(id: Int!): Test!
+    # Retrieve a paginated list of tests
+    #create paginated items
+    tests(page: Int!, size: Int!): GetTests!
 
-   # Retrieve a paginated list of testsets
-  #create paginated items
-  testsets(page:Int!, size: Int!): [Testset!]!
+    # Retrieve a specific Test by its ID
+    test(id: Int!): Test!
 
-  # Retrieve a specific Testset by its ID
-  testset(id: Int!): Testset!
+    # Retrieve a specific Tests for dropdown
+    getdroptests: [DropTest!]
 
-  # Retrieve a  list names of Tests of specfic Testset by its ID
-  testsettests(test_id: Int!, testset_id: Int!, page: Int! ,size: Int!): [Test!]!
+    # Retrieve a paginated list of testsets
+    #create paginated items
+    testsets(page: Int!, size: Int!): GetTestsets!
 
-   # Retrieve a paginated list of testtestsets
-  #create paginated items
-  testtestsets(page:Int!, size: Int!): [TestTestset!]!
+    # Retrieve a specific Testset by its ID
+    testset(id: Int!): Testset!
 
-  # Retrieve a specific TestTestset by its ID
-  testtestset(id: Int!): TestTestset!
+    # Retrieve a  list names of Tests of specfic Testset by its ID
+    testsettests(testset_id: Int!, page: Int!, size: Int!): GetTestSetInstances!
 
-  # Retrieve a  list names of Issues of specfic TestTestset by its ID
-  testtestsetissues(issue_id: Int!, test_testset_id: Int!, page: Int! ,size: Int!): [Issue!]!
+    # Retrieve a paginated list of testinstances
+    #create paginated items
+    testinstances(page: Int!, size: Int!): GetTestInstances!
 
-   # Retrieve a paginated list of issues
-  #create paginated items
-  issues(page:Int!, size: Int!): [Issue!]!
+    # Retrieve a specific TestInstance by its ID
+    testinstance(id: Int!): TestInstance!
 
-  # Retrieve a specific Issue by its ID
-  issue(id: Int!): Issue!
+    # Retrieve a  list names of Issues of specfic TestInstance by its ID
+    testinstanceissues(
+        test_instance_id: Int!
+        page: Int!
+        size: Int!
+    ): GetIssues!
 
-  }
+    #Get TestInstance TestRuns
+    testinstancetestruns(
+        test_instance_id: Int!
+        page: Int!
+        size: Int!
+    ): GetTestRuns!
+
+    #Get Test TestRuns
+    testtestruns(test_id: Int!, page: Int!, size: Int!): GetTestRuns!
+
+    # Retrieve a paginated list of testruns
+    #create paginated items
+    testruns(page: Int!, size: Int!): GetTestRuns!
+
+    # Retrieve a specific TestRun by its ID
+    testrun(id: Int!): TestRun!
+
+    # Retrieve a  list names of Issues of specfic TestRun by its ID
+    testrunissues(test_run_id: Int!, page: Int!, size: Int!): GetIssues!
+
+    #Get TestRun Documents
+    testrundocuments(test_run_id: Int!, page: Int!, size: Int!): GetDocuments!
+
+    # Retrieve a paginated list of issues
+    #create paginated items
+    issues(page: Int!, size: Int!): GetIssues!
+
+    # Retrieve a specific Issue by its ID
+    issue(id: Int!): Issue!
+
+    # Retrieve a paginated list of documents
+    #create paginated items
+    documents(page: Int!, size: Int!): GetDocuments!
+
+    # Retrieve a specific Document by its ID
+    document(id: Int!): Document!
+}
 
 # Define the mutations
 type Mutation {
-  # Create a new sprint
-  #create object
-  createsprint(input: CreateSprintInput!): Sprint!
+    # Create a new sprint
+    #create object
+    createsprint(input: CreateSprintInput!): Sprint!
 
-  # Update an existing sprint
-  updatesprint(input: UpdateSprintInput!): Sprint!
+    # Update an existing sprint
+    updatesprint(input: UpdateSprintInput!): Sprint!
 
-  # Delete an sprint by its ID
-  deletesprint(id: Int!): Boolean!
+    # Delete an sprint by its ID
+    deletesprint(id: Int!): Boolean!
 
-  createrequirementsprint(requirement_id: Int!, sprint_id: Int!): Requirement!
-  deleterequirementsprint(requirement_id: Int!, sprint_id: Int!): Requirement!
+    createrequirementsprint(requirement_id: Int!, sprint_id: Int!): Requirement!
+    deleterequirementsprint(requirement_id: Int!, sprint_id: Int!): Requirement!
 
-  # Create a new requirement
-  #create object
-  createrequirement(input: CreateRequirementInput!): Requirement!
+    createdocumentsprint(document_id: Int!, sprint_id: Int!): Document!
+    deletedocumentsprint(document_id: Int!, sprint_id: Int!): Document!
 
-  # Update an existing requirement
-  updaterequirement(input: UpdateRequirementInput!): Requirement!
+    # Create a new requirement
+    #create object
+    createrequirement(input: CreateRequirementInput!): Requirement!
 
-  # Delete an requirement by its ID
-  deleterequirement(id: Int!): Boolean!
+    # Update an existing requirement
+    updaterequirement(input: UpdateRequirementInput!): Requirement!
 
-  # Create a new test
-  #create object
-  createtest(input: CreateTestInput!): Test!
+    # Delete an requirement by its ID
+    deleterequirement(id: Int!): Boolean!
 
-  # Update an existing test
-  updatetest(input: UpdateTestInput!): Test!
+    createtestrequirement(test_id: Int!, requirement_id: Int!): Test!
+    deletetestrequirement(test_id: Int!, requirement_id: Int!): Test!
 
-  # Delete an test by its ID
-  deletetest(id: Int!): Boolean!
+    createdocumentrequirement(
+        document_id: Int!
+        requirement_id: Int!
+    ): Document!
+    deletedocumentrequirement(
+        document_id: Int!
+        requirement_id: Int!
+    ): Document!
 
-  # Create a new testset
-  #create object
-  createtestset(input: CreateTestsetInput!): Testset!
+    # Create a new test
+    #create object
+    createtest(input: CreateTestInput!): Test!
 
-  # Update an existing testset
-  updatetestset(input: UpdateTestsetInput!): Testset!
+    # Update an existing test
+    updatetest(input: UpdateTestInput!): Test!
 
-  # Delete an testset by its ID
-  deletetestset(id: Int!): Boolean!
+    # Delete an test by its ID
+    deletetest(id: Int!): Boolean!
 
-  createtesttestset(test_id: Int!, testset_id: Int!): Test!
-  deletetesttestset(test_id: Int!, testset_id: Int!): Test!
+    # Create a new testset
+    #create object
+    createtestset(input: CreateTestsetInput!): Testset!
 
-  # Update an existing testtestset
-  updatetesttestset(input: UpdateTestTestsetInput!): TestTestset!
+    # Update an existing testset
+    updatetestset(input: UpdateTestsetInput!): Testset!
 
-  createissuetesttestset(issue_id: Int!, test_testset_id: Int!): Issue!
-  deleteissuetesttestset(issue_id: Int!, test_testset_id: Int!): Issue!
+    # Delete an testset by its ID
+    deletetestset(id: Int!): Boolean!
 
-  # Create a new issue
-  #create object
-  createissue(input: CreateIssueInput!): Issue!
+    createtesttestset(test_id: Int!, testset_id: Int!): Test!
+    deletetesttestset(test_id: Int!, testset_id: Int!): Test!
 
-  # Update an existing issue
-  updateissue(input: UpdateIssueInput!): Issue!
+    # Create a new testinstance
+    #create object
+    createtestinstance(input: CreateTestInstanceInput!): TestInstance!
+    createbatchtestinstance(input: CreateBatchTestInstanceInput!): Boolean!
 
-  # Delete an issue by its ID
-  deleteissue(id: Int!): Boolean!
+    # Update an existing testinstance
+    updatetestinstance(input: UpdateTestInstanceInput!): TestInstance!
 
+    # Delete an testinstance by its ID
+    deletetestinstance(id: Int!): Boolean!
+
+    createissuetestinstance(issue_id: Int!, test_instance_id: Int!): Issue!
+    deleteissuetestinstance(issue_id: Int!, test_instance_id: Int!): Issue!
+
+    createtestruntestinstance(
+        test_run_id: Int!
+        test_instance_id: Int!
+    ): TestRun!
+
+    deletetestruntestinstance(
+        test_run_id: Int!
+        test_instance_id: Int!
+    ): TestRun!
+
+    # Create a new testrun
+    #create object
+    createtestrun(input: CreateTestRunInput!): TestRun!
+
+    # Update an existing testrun
+    updatetestrun(input: UpdateTestRunInput!): TestRun!
+
+    # Delete an testrun by its ID
+    deletetestrun(id: Int!): Boolean!
+
+    createissuetestrun(issue_id: Int!, test_run_id: Int!): Issue!
+    deleteissuetestrun(issue_id: Int!, test_run_id: Int!): Issue!
+
+    createdocumenttestrun(document_id: Int!, test_run_id: Int!): Document!
+    deletedocumenttestrun(document_id: Int!, test_run_id: Int!): Document!
+    # Create a new issue
+    #create object
+    createissue(input: CreateIssueInput!): Issue!
+
+    # Update an existing issue
+    updateissue(input: UpdateIssueInput!): Issue!
+
+    # Delete an issue by its ID
+    deleteissue(id: Int!): Boolean!
+
+    # Create a new document
+    #create object
+    createdocument(input: CreateDocumentInput!): Document!
+
+    # Update an existing document
+    updatedocument(input: UpdateDocumentInput!): Document!
+
+    # Delete an document by its ID
+    deletedocument(id: Int!): Boolean!
 }

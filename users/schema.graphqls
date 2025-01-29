@@ -1,93 +1,107 @@
-    directive @hasProjectRole(roles: [String!]!) on FIELD_DEFINITION
+directive @hasProjectRole(roles: [String!]!) on FIELD_DEFINITION
 
-    enum ProjectStatus {
-        Planning
-        Inprogress
-        Completed
-    }
+enum ProjectStatus {
+    Planning
+    InProgress
+    Completed
+}
 
-    # Define the input type for pagination
-    type Project {
-    	 id: Int!
-    	 name: String!
-    	 description: String!
-    	 uuid: String!
-         status: ProjectStatus!
-    	}
+# Define the input type for pagination
+type Project {
+    id: Int!
+    name: String!
+    description: String!
+    uuid: String!
+    status: ProjectStatus!
+}
 
-    input CreateProjectInput {
-    	  name: String!
-    	  description: String!
-    	}
+type ProjectResponseGet {
+    total: Int!
+    projects: [Project!]
+}
 
-    input UpdateProjectInput {
-    	  id: Int!
-    	  name: String!
-    	  description: String!
-          status: ProjectStatus!
-    	}
+input CreateProjectInput {
+    name: String!
+    description: String!
+}
 
-    type User {
-        Email: String!
-        Password: String!
-    }
+input UpdateProjectInput {
+    id: Int!
+    name: String
+    description: String
+    status: ProjectStatus
+}
 
-    type Role {
-        id: Int!
-        name: String!
-        description: String!
-        active: Boolean!
-    }
+type User {
+    name: String!
+    email: String!
+    password: String!
+}
 
+type Role {
+    id: Int!
+    name: String!
+    description: String!
+    active: Boolean!
+}
 
-    input UserInput {
-        Email: String!
-        Password: String!
-    }
+input UserInput {
+    name: String!
+    email: String!
+    password: String!
+}
 
-    input UserUdateInput {
-        Email: String!
-        UUID:  String!
-        Disabled: Boolean!
-    }
+input UserUdateInput {
+    name: String
+    email: String
+    disabled: Boolean
+}
 
-    type UserGet {
-        ID: Int!
-        Email: String!
-        UUID:  String!
-    }
+type UserGet {
+    id: Int!
+    name: String!
+    email: String!
+    uuid: String!
+    disabled: Boolean!
+}
 
-    type Query {
+type UserResponseGet {
+    total: Int!
+    users: [UserGet!]
+}
 
+type Query {
     # Retrieve a paginated list of projects
     #create paginated items
-    projects(page:Int!, size: Int!): [Project!]!
+    projects(page: Int!, size: Int!): ProjectResponseGet!
 
     # Retrieve a specific Project by its ID
     project(id: Int!): Project!
 
     # Retrieve a specific Project by its ID
-    userprojects(user_id: Int!): [Project!]!
+    userprojects(user_id: Int!): [Project!]
 
     # Retrieve a paginated list of projects
     #create paginated items
     roles: [Role!]!
 
     #create paginated items
-    users(page:Int!, size: Int!): [UserGet!]!
+    users(page: Int!, size: Int!): UserResponseGet!
+
+    #create paginated items
+    dropusers: [UserGet!]
 
     # Retrieve a specific Project by its ID
     user(id: Int!): UserGet!
-    }
+}
 
-
-    type Mutation {
+type Mutation {
     # Create a new project
     #create object
-    createproject(input: CreateProjectInput!): Project!
+    createproject(input: CreateProjectInput!): Project
 
     # Update an existing project
-    updateproject(input: UpdateProjectInput!): Project!
+    updateproject(input: UpdateProjectInput!): Project
 
     # Delete an project by its ID
     deleteproject(id: Int!): Boolean!
@@ -97,7 +111,11 @@
 
     # Update an existing project
     updateuser(input: UserUdateInput!, user_id: Int!): Boolean!
-    changeresetuserpassword(password: String!, email: String! ,reset: Boolean!): Boolean!
+    changeresetuserpassword(
+        password: String!
+        email: String!
+        reset: Boolean!
+    ): Boolean!
 
     # Delete an project by its ID
     deleteuser(id: Int!): Boolean!
@@ -110,5 +128,4 @@
     # add and delete user project
     addprojectuser(user_id: Int!, project_id: Int!): Boolean!
     deleteprojectuser(user_id: Int!, project_id: Int!): Boolean!
-
-    }
+}

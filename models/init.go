@@ -39,8 +39,10 @@ func MigrateToPojectDatabase(dbname string) {
 			&Requirement{},
 			&Test{},
 			&Testset{},
-			&TestTestset{},
+			&TestInstance{},
+			&TestRun{},
 			&Issue{},
+			&Document{},
 		); err != nil {
 			log.Fatalln(err)
 		}
@@ -67,8 +69,10 @@ func CleanDatabase() {
 					&Requirement{},
 					&Test{},
 					&Testset{},
-					&TestTestset{},
+					&TestInstance{},
+					&TestRun{},
 					&Issue{},
+					&Document{},
 				)
 			}
 
