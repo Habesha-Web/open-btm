@@ -187,13 +187,11 @@ func MiddlewareJSON(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
 	// Unmarshal JSON to struct
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		return err
 	}
-
 	// Finally setting EndpointJSON for security Middleware and returning nil for no error
 	EndpointJSON = response.Data
 	return nil
@@ -709,6 +707,12 @@ func GetAppRoles(ctx context.Context) ([]model.Role, error) {
 // BTM App logging in to the IAM( Blue Admin App)
 // ############################################################################
 func LoginBlueAdmin() (string, bool) {
+
+	// response
+	var response struct {
+		Data LoginResponse `json:"data"`
+	}
+
 	// Retrieve configuration values
 	url := configs.AppConfig.Get("BLUE_ADMIN_URI")
 	email := configs.AppConfig.Get("BLUE_ADMIN_USER")
@@ -728,7 +732,7 @@ func LoginBlueAdmin() (string, bool) {
 	// change post data to json strings
 	postDataBytes, err := json.Marshal(postData)
 	if err != nil {
-		return "Error marshalling request data", false
+		return err.Error(), false
 	}
 
 	// creating blank context for Loging in
@@ -738,13 +742,12 @@ func LoginBlueAdmin() (string, bool) {
 	//
 	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%v/login", url), bytes.NewReader(postDataBytes))
 	if err != nil {
-		return "Error creating request", false
+		return err.Error(), false
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("#########: %v\n", err)
 		return "Error executing request", false
 	}
 	defer resp.Body.Close()
@@ -752,18 +755,17 @@ func LoginBlueAdmin() (string, bool) {
 	// Read and unmarshal response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "Error reading response body", false
+		return err.Error(), false
 	}
 
-	var responseMap map[string]interface{}
-	if err := json.Unmarshal(body, &responseMap); err != nil {
-		return "Error unmarshalling response", false
+	// Unmarshal JSON to struct
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		fmt.Printf("#########: %v\n", err)
+		return err.Error(), false
 	}
 
-	accessToken, ok := responseMap["data"].(map[string]interface{})["access_token"].(string)
-	if !ok {
-		return "Access token not found in response", false
-	}
+	accessToken := response.Data.AccessToken
 
 	AdminAccessToken = accessToken
 	return accessToken, true

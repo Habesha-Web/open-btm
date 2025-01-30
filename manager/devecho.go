@@ -112,8 +112,9 @@ func graph_echo_run(env string) {
 	// Rate Limiting to throttle overload
 	app.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(1000)))
 
-	_, ok := models.LoginBlueAdmin()
+	resp, ok := models.LoginBlueAdmin()
 	if !ok {
+		fmt.Println(resp)
 		time.Sleep(5 * time.Second)
 		models.LoginBlueAdmin()
 	}
